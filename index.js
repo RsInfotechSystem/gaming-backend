@@ -16,7 +16,7 @@ app.use('/', routes);
 
 app.get("/", (request, response) => {
     response.status(200).json({
-        message: "SBM_PG backend is running 🏃‍♂️🏃‍♂️",
+        message: "Gaming backend is running 🏃‍♂️🏃‍♂️",
     });
 });
 

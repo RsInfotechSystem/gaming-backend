@@ -129,8 +129,8 @@ const roleServices = {
                     },
                     isDeleted: false
                 },
-                attributes: ['role', 'id'],
-                order: [['role', 'ASC']]
+                attributes: ['name', 'id'],
+                order: [['name', 'ASC']]
             });
 
             return roles;

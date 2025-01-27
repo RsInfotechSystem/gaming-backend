@@ -194,18 +194,18 @@ const userServices = {
             throw error;
         }
     },
-    getLocationWiseUser: async (locationId) => {
-        try {
-            return await User.findAll({
-                where: {
-                    locationId,
-                    isDeleted: false
-                }
-            });
-        } catch (error) {
-            throw error;
-        }
-    },
+    // getLocationWiseUser: async (locationId) => {
+    //     try {
+    //         return await User.findAll({
+    //             where: {
+    //                 locationId,
+    //                 isDeleted: false
+    //             }
+    //         });
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // },
     getAdminInfo: async () => {
         try {
             const admins = await User.findAll({

@@ -2,7 +2,10 @@ const { Sequelize, DataTypes } = require("sequelize");
 const dotenv = require('dotenv');
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_URL, {
+// console.log("DB URL : ",process.env.DB_URL);
+// console.log('DB_SSL:', process.env.DB_SSL);
+
+const sequelize = new Sequelize("postgresql://postgres:manthan@localhost:5432/postgres", {
     dialect: "postgres",
     dialectOptions: {
         ssl: process.env.DB_SSL == "true",
@@ -58,10 +61,11 @@ StockOut.belongsTo(User, { foreignKey: 'stockOutById', as: 'stockOutBy' })
 
 //!------------when command is npm run dev----------------------------
 //? No need of this code, remove it
-// sequelize.sync({ force: false }).then(() => {
-//     console.log("Database & tables created!");
-// }).catch((err) => {
-//     console.error('Unable to create tables, shutting down...', err);
+// sequelize.sync({ alter: true , logging: console.log }).then(() => {
+//     console.log(" Tables creation process done!");
+//     process.exit(0);
+// }).catch(err => {
+//     console.error("Migration failed:", err);
 //     process.exit(1);
 // });
 
