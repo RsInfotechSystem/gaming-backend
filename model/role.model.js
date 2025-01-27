@@ -8,7 +8,7 @@ const Role = (sequelize, DataTypes) => {
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         tab: {
             type: DataTypes.ARRAY(DataTypes.STRING),
