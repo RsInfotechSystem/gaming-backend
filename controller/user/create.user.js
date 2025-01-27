@@ -7,10 +7,10 @@ const { createUserValidationSchema } = require("../../utils/validation/user.vali
 const createUser = async (request, response) => {
     try {
         //extract data from request body
-        const { name, email, mobile, password, roleId, locationId } = request.body;
+        const { name, email, mobile, password, roleId} = request.body;
 
         //check validation
-        const validationResult = await createUserValidationSchema.validate({ name, email, mobile: mobile?.toString(), password, roleId, locationId }, { abortEarly: true });
+        const validationResult = await createUserValidationSchema.validate({ name, email, mobile: mobile?.toString(), password, roleId }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -39,13 +39,13 @@ const createUser = async (request, response) => {
         };
 
         //check location exist or not
-        const isLocationExist = await locationServices.getLocationById(locationId);
-        if (!isLocationExist) {
-            return response.status(200).json({
-                status: "FAILED",
-                message: "Location does not exist"
-            })
-        };
+        // const isLocationExist = await locationServices.getLocationB;
+        // if (!isLocationExist) {
+        //     return response.status(200).json({
+        //         status: "FAILED",
+        //         message: "Location does not exist"
+        //     })
+        // };
 
 
         let userId;
@@ -54,9 +54,9 @@ const createUser = async (request, response) => {
         //generate user id
         if (users) {
             const lastUserUserId = Number(users.userId.substring(3)) + 1;
-            userId = `IMS${lastUserUserId}`
+            userId = `GAM${lastUserUserId}`
         } else {
-            userId = "IMS1000"
+            userId = "GAM1000"
         };
 
         const dataToInsert = {
@@ -66,7 +66,6 @@ const createUser = async (request, response) => {
             password,
             roleId,
             roleName: isRoleExist?.name,
-            locationId,
             userId,
             isActive: true,
             isDeleted: false

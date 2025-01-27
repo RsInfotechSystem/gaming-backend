@@ -14,7 +14,7 @@ const userRoutes = require("express").Router();
 //!--------------User Routes----------------
 userRoutes.post("/login", login);
 userRoutes.post("/create-user", authenticateUserJWT, tabAccessMiddleware("User Management"), createUser);
-userRoutes.post("/get-user-list", authenticateUserJWT, tabAccessMiddleware("User Management"), getUserList);
+userRoutes.post("/get-user-list",  getUserList);
 userRoutes.post("/get-user-by-id", getUserById);
 userRoutes.post("/update-user", authenticateUserJWT, tabAccessMiddleware("User Management"), updateUser);
 userRoutes.post("/change-user-status", authenticateUserJWT, tabAccessMiddleware("User Management"), changeUserStatus)

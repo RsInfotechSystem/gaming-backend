@@ -9,7 +9,6 @@ exports.createUserValidationSchema = Joi.object({
     }),
     password: Joi.string().required(),
     roleId: Joi.string().length(36).required(),
-    locationId: Joi.string().length(36).required()
 });
 
 
