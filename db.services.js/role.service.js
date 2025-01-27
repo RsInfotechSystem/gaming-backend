@@ -15,6 +15,8 @@ const roleServices = {
         try {
             return await Role.create(dataToInsert);
         } catch (error) {
+            // console.log("error while creation : ", error)
+
             throw error;
         }
     },

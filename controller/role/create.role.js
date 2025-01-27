@@ -18,14 +18,14 @@ const createRole = async (request, response) => {
         }
 
         //check role already exist 
-        const isRoleExist = await roleServices.getRoleByName(name)
-        if (isRoleExist) {
-            response.status(200).json({
-                status: "FAILED",
-                message: "Role already exist with this name",
-            });
-            return;
-        }
+        // const isRoleExist = await roleServices.getRoleByName(name)
+        // if (isRoleExist) {
+        //     response.status(200).json({
+        //         status: "FAILED",
+        //         message: "Role already exist with this name",
+        //     });
+        //     return;
+        // }
 
         const dataToInsert = {
             name: name?.toLowerCase(),
@@ -46,6 +46,7 @@ const createRole = async (request, response) => {
             });
         }
     } catch (error) {
+        console.log("error : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,
