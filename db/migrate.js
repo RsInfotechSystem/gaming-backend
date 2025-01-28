@@ -1,6 +1,6 @@
 const { sequelize } = require("./db");
 
-sequelize.sync({ alter: true , logging: console.log }).then(() => {
+sequelize.sync({ alter: true, logging: console.log }).then(() => {
     console.log(" Tables creation process done!");
     process.exit(0);
 }).catch(err => {

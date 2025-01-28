@@ -2,13 +2,14 @@ const { Sequelize, DataTypes } = require("sequelize");
 const dotenv = require('dotenv');
 dotenv.config();
 
-// console.log("DB URL : ",process.env.DB_URL);
-// console.log('DB_SSL:', process.env.DB_SSL);
+// Destructure variables from .env for easier usage
+const { DB_URL, DB_SSL } = process.env;
 
-const sequelize = new Sequelize("postgresql://postgres:manthan@localhost:5432/postgres", {
+// Initialize Sequelize using the DB_URL
+const sequelize = new Sequelize(DB_URL, {
     dialect: "postgres",
     dialectOptions: {
-        ssl: process.env.DB_SSL == "true",
+        ssl: DB_SSL === "true", // Convert the string "true" to a boolean
     },
     pool: {
         max: 5,
@@ -17,7 +18,6 @@ const sequelize = new Sequelize("postgresql://postgres:manthan@localhost:5432/po
         idle: 10000,
     },
 });
-
 sequelize
     .authenticate()
     .then(() => {
