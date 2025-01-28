@@ -137,11 +137,11 @@ const userServices = {
                         as: 'role',
                         attributes: ['name', 'tab']
                     },
-                    {
-                        model: Location,
-                        as: 'location',
-                        attributes: ['name']
-                    }
+                    // {
+                    //     model: Location,
+                    //     as: 'location',
+                    //     attributes: ['name']
+                    // }
                 ]
             });
 
