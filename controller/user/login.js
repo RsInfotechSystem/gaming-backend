@@ -5,10 +5,10 @@ const generateUserJWT = require("../../utils/middleware/generate-token")
 const login = async (request, response) => {
     try {
         //extract data from request body
-        const { userId, password } = request.body;
+        const { email, password } = request.body;
 
         //check validation
-        const validationResult = await loginValidationSchema.validate({ userId, password }, { abortEarly: true });
+        const validationResult = await loginValidationSchema.validate({ email, password }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -18,11 +18,11 @@ const login = async (request, response) => {
         };
 
         //check user exist or not
-        const isUserExist = await userServices.getUserByUserId(userId);
+        const isUserExist = await userServices.getUserByEmail(email);
         if (!isUserExist) {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Invalid userId, check your userId & try again!"
+                message: "Invalid email, check your email & try again!"
             })
         };
 

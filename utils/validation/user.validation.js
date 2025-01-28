@@ -14,7 +14,7 @@ exports.createUserValidationSchema = Joi.object({
 
 //?-----------Login Validation---------------------
 exports.loginValidationSchema = Joi.object().keys({
-    userId: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).max(16).required(),
 });
 
