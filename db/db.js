@@ -38,6 +38,7 @@ const Brand = require("../model/brand.model")(sequelize, DataTypes);
 const Stock = require("../model/stock.model")(sequelize, DataTypes);
 const StockOut = require("../model/stock-out.model")(sequelize, DataTypes);
 const Notification = require("../model/notification.model")(sequelize, DataTypes)
+const Game = require("../model/game.model")(sequelize, DataTypes);
 
 // Define associations
 User.belongsTo(Role, { foreignKey: 'roleId', as: 'role' });
@@ -54,10 +55,13 @@ Stock.belongsTo(User, { foreignKey: 'stockInBy', as: 'stockInByUser' });
 Stock.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignedToUser' });
 Stock.belongsTo(User, { foreignKey: 'assignedBy', as: 'assignedByUser' });
 
-StockOut.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' });
-StockOut.belongsTo(User, { foreignKey: 'stockOutById', as: 'stockOutBy' })
+// StockOut.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' });
+// StockOut.belongsTo(User, { foreignKey: 'stockOutById', as: 'stockOutBy' })
 // Stock.belongsTo(Stock, { foreignKey: 'addedIn', as: 'addedInStock' });
 
+
+Game.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+// Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });
 
 //!------------when command is npm run dev----------------------------
 //? No need of this code, remove it
