@@ -28,8 +28,7 @@ exports.updateUserValidation = Joi.object().keys({
         'string.pattern.base': 'Invalid mobile number format',
     }),
     password: Joi.string().required(),
-    roleId: Joi.string().length(36).required(),
-    locationId: Joi.string().length(36).required()
+    roleId: Joi.string().length(36).required()
 });
 
 

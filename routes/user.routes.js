@@ -13,13 +13,13 @@ const userRoutes = require("express").Router();
 
 //!--------------User Routes----------------
 userRoutes.post("/login", login);
-userRoutes.post("/create-user", authenticateUserJWT, tabAccessMiddleware("User Management"), createUser);
-userRoutes.post("/get-user-list",  getUserList);
-userRoutes.post("/get-user-by-id", getUserById);
-userRoutes.post("/update-user", authenticateUserJWT, tabAccessMiddleware("User Management"), updateUser);
-userRoutes.post("/change-user-status", authenticateUserJWT, tabAccessMiddleware("User Management"), changeUserStatus)
-userRoutes.post("/delete-user", authenticateUserJWT, tabAccessMiddleware("User Management"), deleteSelectedUser)
-userRoutes.post("/get-location-wise-users", authenticateUserJWT, getLocationWiseUser);
+userRoutes.post("/create-user", authenticateUserJWT, tabAccessMiddleware("user management"), createUser);
+userRoutes.post("/get-user-list", authenticateUserJWT, tabAccessMiddleware("user management"),  getUserList);
+userRoutes.post("/get-user-by-id", authenticateUserJWT, tabAccessMiddleware("user management"), getUserById);
+userRoutes.post("/update-user", authenticateUserJWT, tabAccessMiddleware("user management"), updateUser);
+userRoutes.post("/change-user-status", authenticateUserJWT, tabAccessMiddleware("user management"), changeUserStatus)
+userRoutes.post("/delete-user", authenticateUserJWT, tabAccessMiddleware("user management"), deleteSelectedUser)
+// userRoutes.post("/get-location-wise-users", authenticateUserJWT, getLocationWiseUser);
 
 
 
