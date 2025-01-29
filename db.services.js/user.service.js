@@ -38,11 +38,6 @@ const userServices = {
                 },
                 include: [
                     {
-                        model: Location,
-                        as: 'location',
-                        attributes: ['name']
-                    },
-                    {
                         model: Role,
                         as: 'role',
                         attributes: ['name']
@@ -154,15 +149,15 @@ const userServices = {
             throw error;
         }
     },
-    getUserByEmail : async (email)=>{
-        try{
+    getUserByEmail: async (email) => {
+        try {
             return await User.findOne({
-                where : {
-                    email : email,
-                    isDeleted : false
+                where: {
+                    email: email,
+                    isDeleted: false
                 }
             })
-        }catch(error){
+        } catch (error) {
             throw error;
         }
     },

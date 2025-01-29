@@ -1,23 +1,20 @@
-const Joi = require("joi"); 
+const Joi = require("joi");
 
 exports.createGameValidation = Joi.object().keys({
+    // name, description, title, userId, contestIds, playedCount
     name: Joi.string().required(),
     description: Joi.string(),
-    userId: Joi.string().length(36).required(),
     title: Joi.string().required(),
-    playerCount: Joi.number().required(),
-    isActive: Joi.boolean().required(),
-    isDeleted: Joi.boolean().required(),
+    contestIds: Joi.array().items(Joi.string().length(36).optional()).required(),
+    playedCount: Joi.number().required(),
 });
 
 exports.updateGameValidation = Joi.object().keys({
     gameId: Joi.string().length(36).required(),
-    name: Joi.string(),
+    name: Joi.string().required(),
     description: Joi.string(),
-    userId: Joi.string().length(36),
-    title: Joi.string(),
-    playerCount: Joi.number(),
-    isActive: Joi.boolean(),
-    isDeleted: Joi.boolean(),
+    title: Joi.string().required(),
+    contestIds: Joi.array().items(Joi.string().length(36).optional()).required(),
+    playedCount: Joi.number().required(),
 });
 
