@@ -98,10 +98,10 @@ const gameServices = {
       throw error;
     }
   },
-  // deleteGame: async (modelIds) => {
+  // deleteGame: async (gameIds) => {
   //   try {
-  //     const objectIdArray = modelIds.map((id) => new ObjectId(id));
-  //     return await Modal.deleteMany({ _id: { $in: objectIdArray } })
+  //     const objectIdArray = gameIds.map((id) => new ObjectId(id));
+  //     return await Game.deleteMany({ _id: { $in: objectIdArray } })
   //   } catch (error) {
   //     throw error;
   //   }
