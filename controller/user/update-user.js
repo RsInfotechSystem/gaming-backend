@@ -7,10 +7,10 @@ const { updateUserValidation } = require("../../utils/validation/user.validation
 const updateUser = async (request, response) => {
     try {
         //extract data from request body
-        const { userId, name, email, mobile, password, roleId, locationId } = request.body;
+        const { userId, name, email, mobile, password, roleId } = request.body;
 
         //check validation
-        const validationResult = await updateUserValidation.validate({ userId, name, email, mobile, password, roleId, locationId }, { abortEarly: true });
+        const validationResult = await updateUserValidation.validate({ userId, name, email, mobile, password, roleId}, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -56,14 +56,14 @@ const updateUser = async (request, response) => {
             })
         };
 
-        //check location exist or not
-        const isLocationExist = await locationServices.getLocationById(locationId);
-        if (!isLocationExist) {
-            return response.status(200).json({
-                status: "FAILED",
-                message: "Location does not exist"
-            })
-        };
+        // //check location exist or not
+        // const isLocationExist = await locationServices.getLocationById(locationId);
+        // if (!isLocationExist) {
+        //     return response.status(200).json({
+        //         status: "FAILED",
+        //         message: "Location does not exist"
+        //     })
+        // };
 
 
         const dataToUpdate = {
@@ -73,7 +73,6 @@ const updateUser = async (request, response) => {
             password,
             roleId,
             roleName: isRoleExist?.name,
-            locationId
         };
 
         //update data into db and send response to client

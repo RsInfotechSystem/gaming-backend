@@ -2,7 +2,7 @@ const Role = (sequelize, DataTypes) => {
     return sequelize.define('Role', {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            defaultValue:  DataTypes.UUIDV4,
             primaryKey: true,
             allowNull: false,
         },

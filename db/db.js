@@ -2,10 +2,14 @@ const { Sequelize, DataTypes } = require("sequelize");
 const dotenv = require('dotenv');
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_URL, {
+// Destructure variables from .env for easier usage
+const { DB_URL, DB_SSL } = process.env;
+
+// Initialize Sequelize using the DB_URL
+const sequelize = new Sequelize(DB_URL, {
     dialect: "postgres",
     dialectOptions: {
-        ssl: process.env.DB_SSL == "true",
+        ssl: DB_SSL === "true", // Convert the string "true" to a boolean
     },
     pool: {
         max: 5,
@@ -14,7 +18,6 @@ const sequelize = new Sequelize(process.env.DB_URL, {
         idle: 10000,
     },
 });
-
 sequelize
     .authenticate()
     .then(() => {
@@ -35,6 +38,7 @@ const Brand = require("../model/brand.model")(sequelize, DataTypes);
 const Stock = require("../model/stock.model")(sequelize, DataTypes);
 const StockOut = require("../model/stock-out.model")(sequelize, DataTypes);
 const Notification = require("../model/notification.model")(sequelize, DataTypes)
+const Game = require("../model/game.model")(sequelize, DataTypes);
 
 // Define associations
 User.belongsTo(Role, { foreignKey: 'roleId', as: 'role' });
@@ -51,17 +55,21 @@ Stock.belongsTo(User, { foreignKey: 'stockInBy', as: 'stockInByUser' });
 Stock.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignedToUser' });
 Stock.belongsTo(User, { foreignKey: 'assignedBy', as: 'assignedByUser' });
 
-StockOut.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' });
-StockOut.belongsTo(User, { foreignKey: 'stockOutById', as: 'stockOutBy' })
+// StockOut.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' });
+// StockOut.belongsTo(User, { foreignKey: 'stockOutById', as: 'stockOutBy' })
 // Stock.belongsTo(Stock, { foreignKey: 'addedIn', as: 'addedInStock' });
 
 
+Game.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+// Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });
+
 //!------------when command is npm run dev----------------------------
 //? No need of this code, remove it
-// sequelize.sync({ force: false }).then(() => {
-//     console.log("Database & tables created!");
-// }).catch((err) => {
-//     console.error('Unable to create tables, shutting down...', err);
+// sequelize.sync({ alter: true , logging: console.log }).then(() => {
+//     console.log(" Tables creation process done!");
+//     process.exit(0);
+// }).catch(err => {
+//     console.error("Migration failed:", err);
 //     process.exit(1);
 // });
 

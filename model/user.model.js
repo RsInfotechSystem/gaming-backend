@@ -37,13 +37,13 @@ const User = (sequelize, DataTypes) => {
                 key: 'id',
             },
         },
-        locationId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'Location', // 'Locations' should match the name of the Location model
-                key: 'id',
-            },
-        },
+        // locationId: {
+        //     type: DataTypes.UUID,
+        //     references: {
+        //         model: 'Location', // 'Locations' should match the name of the Location model
+        //         key: 'id',
+        //     },
+        // },
         userId: {
             type: DataTypes.STRING,
             unique: true,

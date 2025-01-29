@@ -34,6 +34,8 @@ const createRole = async (request, response) => {
 
         //Add role in db and send response to client
         const result = await roleServices.createRole(dataToInsert);
+        console.log("result : ", result);
+
         if (result) {
             return response.status(200).json({
                 status: "SUCCESS",

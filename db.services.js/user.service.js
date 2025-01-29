@@ -61,15 +61,15 @@ const userServices = {
                     isDeleted: false
                 },
                 include: [
-                    {
-                        model: Location,
-                        as: 'location',
-                        attributes: ['name']
-                    },
+                    // {
+                    //     model: Location,
+                    //     as: 'location',
+                    //     attributes: ['name']
+                    // },
                     {
                         model: Role,
                         as: 'role',
-                        //attributes: ['name']
+                        // attributes: ['name']
                     }
                 ]
             });
@@ -137,11 +137,11 @@ const userServices = {
                         as: 'role',
                         attributes: ['name', 'tab']
                     },
-                    {
-                        model: Location,
-                        as: 'location',
-                        attributes: ['name']
-                    }
+                    // {
+                    //     model: Location,
+                    //     as: 'location',
+                    //     attributes: ['name']
+                    // }
                 ]
             });
 
@@ -151,6 +151,18 @@ const userServices = {
                 users
             };
         } catch (error) {
+            throw error;
+        }
+    },
+    getUserByEmail : async (email)=>{
+        try{
+            return await User.findOne({
+                where : {
+                    email : email,
+                    isDeleted : false
+                }
+            })
+        }catch(error){
             throw error;
         }
     },
@@ -194,18 +206,18 @@ const userServices = {
             throw error;
         }
     },
-    getLocationWiseUser: async (locationId) => {
-        try {
-            return await User.findAll({
-                where: {
-                    locationId,
-                    isDeleted: false
-                }
-            });
-        } catch (error) {
-            throw error;
-        }
-    },
+    // getLocationWiseUser: async (locationId) => {
+    //     try {
+    //         return await User.findAll({
+    //             where: {
+    //                 locationId,
+    //                 isDeleted: false
+    //             }
+    //         });
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // },
     getAdminInfo: async () => {
         try {
             const admins = await User.findAll({

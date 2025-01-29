@@ -3,7 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const routes = require("./routes/routes");
 const app = express();
-const PORT = process.env.PORT || 3020;
+const PORT = process.env.PORT || 8000;
 
 
 // Middleware
@@ -16,7 +16,7 @@ app.use('/', routes);
 
 app.get("/", (request, response) => {
     response.status(200).json({
-        message: "SBM_PG backend is running 🏃‍♂️🏃‍♂️",
+        message: "Gaming backend is running 🏃‍♂️🏃‍♂️",
     });
 });
 

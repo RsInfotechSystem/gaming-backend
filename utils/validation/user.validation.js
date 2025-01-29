@@ -9,13 +9,12 @@ exports.createUserValidationSchema = Joi.object({
     }),
     password: Joi.string().required(),
     roleId: Joi.string().length(36).required(),
-    locationId: Joi.string().length(36).required()
 });
 
 
 //?-----------Login Validation---------------------
 exports.loginValidationSchema = Joi.object().keys({
-    userId: Joi.string().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).max(16).required(),
 });
 
@@ -29,8 +28,7 @@ exports.updateUserValidation = Joi.object().keys({
         'string.pattern.base': 'Invalid mobile number format',
     }),
     password: Joi.string().required(),
-    roleId: Joi.string().length(36).required(),
-    locationId: Joi.string().length(36).required()
+    roleId: Joi.string().length(36).required()
 });
 
 
