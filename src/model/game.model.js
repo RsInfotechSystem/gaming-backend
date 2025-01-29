@@ -41,6 +41,17 @@ const Game = (Sequelize, DataTypes) => {
         //     },
         //     defaultValue: [],
         // },
+        // oldGameFiles: {
+        //     type: DataTypes.JSON,
+        //     allowNull: true,
+        //     defaultValue: [],
+        // },
+        gamefiles: {
+            type: DataTypes.JSONB,  // JSONB allows storing structured JSON (array of objects)
+            allowNull: false,
+            defaultValue: [], // Default to an empty array
+        },
+
         playedCount: {
             type: DataTypes.INTEGER,
             allowNull: false,

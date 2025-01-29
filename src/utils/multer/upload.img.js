@@ -6,7 +6,7 @@ const uniqId = require('uniqid');
 
 const multerStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const path = `public/images/`;// file added to the public folder of the root directory
+        const path = `public/document/`;// file added to the public folder of the root directory
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path)
         }

@@ -15,6 +15,7 @@ exports.updateGameValidation = Joi.object().keys({
     description: Joi.string(),
     title: Joi.string().required(),
     contestIds: Joi.array().items(Joi.string().length(36).optional()).required(),
+    oldGameFiles: Joi.array().items().allow(null, "").optional(),
     playedCount: Joi.number().required(),
 });
 
