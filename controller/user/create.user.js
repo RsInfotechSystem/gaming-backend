@@ -1,4 +1,4 @@
-const locationServices = require("../../db.services.js/location.service");
+// const locationServices = require("../../db.services.js/location.service");
 const roleServices = require("../../db.services.js/role.service");
 const userServices = require("../../db.services.js/user.service");
 const { createUserValidationSchema } = require("../../utils/validation/user.validation");
@@ -8,6 +8,13 @@ const createUser = async (request, response) => {
     try {
         //extract data from request body
         const { name, email, mobile, password, roleId} = request.body;
+
+        if (!name || !email || !mobile || !password || !roleId) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "All fields are required"
+            });
+        }
 
         //check validation
         const validationResult = await createUserValidationSchema.validate({ name, email, mobile: mobile?.toString(), password, roleId }, { abortEarly: true });
