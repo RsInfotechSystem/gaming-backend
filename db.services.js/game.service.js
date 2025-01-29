@@ -1,4 +1,4 @@
-const { Game } = require("../db/db");
+const { Game, User } = require("../db/db");
 const countPages = require("../utils/helper/count-pages");
 const limit = Number(process.env.LIMIT) ?? 20; //number of documents have to show per page
 const { Op } = require("sequelize");
@@ -7,78 +7,6 @@ const gameServices = {
   createGame: async (dataToInsert) => {
     try {
       return await Game.create(dataToInsert);
-    } catch (error) {
-      throw error;
-    }
-  },
-  getGameById: async (gameId) => {
-    try {
-      return await Game.findOne({
-        where: {
-          id: gameId,
-          isDeleted: false,
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  getGameList: async (page = 1, searchString) => {
-    try {
-      const filter = {
-        isDeleted: false,
-      };
-
-      if (searchString) {
-        filter[Op.or] = [
-          {
-            name: {
-              [Op.iLike]: `%${searchString}%`,
-            },
-          },
-          {
-            title: {
-              [Op.iLike]: `%${searchString}%`,
-            },
-          },
-        ];
-      }
-
-      if (page < 1) {
-        page = 1;
-      }
-
-      //count total records
-      const totalRecords = await Game.count({
-        where: filter,
-      });
-
-      //Fetch paginated records
-      const gamelist = await Game.findAll({
-        where: filter,
-        order: [["createdAt", "DESC"]],
-        limit: limit,
-        offset: (page - 1) * limit,
-      });
-
-      //calculate total pages
-      const totalPages = countPages(totalRecords);
-      return {
-        totalPages,
-        gamelist,
-      };
-    } catch (error) {
-      throw error;
-    }
-  },
-  getGameByName: async (gameName) => {
-    try {
-      return await Game.findOne({
-        where: {
-          name: gameName,
-          isDeleted: false,
-        },
-      });
     } catch (error) {
       throw error;
     }
@@ -95,7 +23,90 @@ const gameServices = {
       throw error;
     }
   },
-  deleteGame: async (gameId) => {
+  getGameById: async (gameId) => {
+    try {
+      return await Game.findOne({
+        where: {
+          id: gameId,
+          isDeleted: false,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getGameList: async (page = 1, searchString) => {
+    try {
+      const filter = { isDeleted: false };
+
+      const userFilter = searchString ? { name: { [Op.iLike]: `%${searchString}%` } } : {};
+
+      if (searchString) {
+        filter[Op.or] = [
+          { name: { [Op.iLike]: `%${searchString}%` } },
+          { description: { [Op.iLike]: `%${searchString}%` } },
+          { title: { [Op.iLike]: `%${searchString}%` } },
+          // { "$addedByUser.name$": { [Op.iLike]: `%${searchString}%` } }, // Search by addedBy user name,
+          // { "$updatedByUser.name$": { [Op.iLike]: `%${searchString}%` } }, // Search by updatedBy user name
+          // { playedCount: { [Op.iLike]: `%${searchString}%` } },
+          // { isActive: { [Op.iLike]: `%${searchString}%` } },
+        ];
+      }
+
+      // Count total records for pagination
+      const totalRecords = await Game.count({
+        where: filter,
+        include: [
+          { model: User, as: "addedByUser", where: userFilter, required: false, attributes: [] },
+          { model: User, as: "updatedByUser", where: userFilter, required: false, attributes: [] }
+        ]
+      });
+
+      // Fetch paginated records
+      const gameList = await Game.findAll({
+        where: filter,
+        include: [
+          { model: User, as: "addedByUser", where: userFilter, required: false, attributes: [] },
+          { model: User, as: "updatedByUser", where: userFilter, required: false, attributes: [] }
+        ],
+        order: [["updatedAt", "DESC"]],
+        limit: limit,
+        offset: (page - 1) * limit,
+      });
+
+      //calculate total pages
+      const totalPages = await countPages(totalRecords);
+      return {
+        totalPages,
+        gameList,
+      };
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getGameByName: async (gameName) => {
+    try {
+      return await Game.findOne({
+        where: {
+          name: gameName,
+          isDeleted: false,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+  // deleteGame: async (gameIds) => {
+  //   try {
+  //     const objectIdArray = gameIds.map((id) => new ObjectId(id));
+  //     return await Game.deleteMany({ _id: { $in: objectIdArray } })
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
+  deleteGame: async (gameIds) => {
     try {
       return await Game.update(
         {
@@ -103,7 +114,7 @@ const gameServices = {
         },
         {
           where: {
-            id: gameId,
+            id: gameIds,
             isDeleted: false,
           },
         }

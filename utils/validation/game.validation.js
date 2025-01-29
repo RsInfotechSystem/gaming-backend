@@ -18,3 +18,7 @@ exports.updateGameValidation = Joi.object().keys({
     playedCount: Joi.number().required(),
 });
 
+exports.gameIdsValidationSchema = Joi.object().keys({
+    gameIds: Joi.array().min(1).items(Joi.string().length(36).required()).required()
+})
+

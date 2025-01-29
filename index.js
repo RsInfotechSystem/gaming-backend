@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const routes = require("./routes/routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
-
+const path = require('path');
 
 // Middleware
 app.use(cors({ origin: "*" }));
@@ -12,6 +12,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//routes
+app.use('/getFiles', express.static(path.join(__dirname, '')));
 app.use('/', routes);
 
 app.get("/", (request, response) => {

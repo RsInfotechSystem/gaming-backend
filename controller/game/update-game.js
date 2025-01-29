@@ -1,5 +1,4 @@
 const gameServices = require("../../db.services.js/game.service");
-const userServices = require("../../db.services.js/user.service");
 const { updateGameValidation } = require("../../utils/validation/game.validation");
 
 
@@ -21,7 +20,7 @@ const updateGame = async (request, response) => {
         }
 
         //check user exist or not
-        const isGameExist = await userServices.getUserByObjId(gameId);
+        const isGameExist = await gameServices.getGameById(gameId);
         if (!isGameExist) {
             return response.status(200).json({
                 status: "FAILED",
@@ -29,6 +28,14 @@ const updateGame = async (request, response) => {
             });
         };
 
+        console.log("isGameExist : ", isGameExist);
+
+        // if (!isGameExist ?) {
+        //     return response.status(200).json({
+        //         status: "FAILED",
+        //         message: "User does not exist"
+        //     });
+        // };
         // //check contest exist or not
         // for (let id of contestIds) {
         // const isContestExist = await userServices.getUserByObjId(id);
@@ -42,22 +49,22 @@ const updateGame = async (request, response) => {
 
 
         const dataToInsert = {
-            name, description, title, addedBy: id, contestIds, playedCount
+            name, description, title, updatedBy: id, contestIds, playedCount
         }
 
         //Add role in db and send response to client
-        const result = await gameServices.updateGame(dataToInsert);
+        const result = await gameServices.updateGame(gameId, dataToInsert);
         console.log("result : ", result);
 
         if (result) {
             return response.status(200).json({
                 status: "SUCCESS",
-                message: "Game added successfully",
+                message: "Game updated successfully",
             });
         } else {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Failed to add game, please try again!",
+                message: "Failed to update game, please try again!",
             });
         }
     } catch (error) {
