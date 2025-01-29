@@ -1,13 +1,28 @@
 const gameServices = require("../../db.services.js/game.service");
 const userServices = require("../../db.services.js/user.service");
+const runMiddleware = require("../../utils/helper/multer.middleware");
 const { createGameValidation } = require("../../utils/validation/game.validation");
+const { uploadImg } = require('../../utils/multer/upload.img');
 
 
 const createGame = async (request, response) => {
     try {
         const { id } = request
+
+        //Upload image file using multer
+        const file = await runMiddleware(request, response, uploadImg.array("gamefiles", 10));
+        if (file) {
+            response.status(200).json({
+                status: "FAILED",
+                message: file?.code,
+            });
+            return;
+        };
+
+        const gameDetails = JSON.parse(request.body.gameDetails);
+
         //extract data from request body
-        const { name, description, title, contestIds, playedCount } = request.body;
+        const { name, description, title, contestIds, playedCount } = gameDetails;
 
         //check validation
         const validationResult = await createGameValidation.validate({ name, description, title, contestIds, playedCount }, { abortEarly: true });
@@ -39,9 +54,18 @@ const createGame = async (request, response) => {
         // };
         // }
 
+        const attachment = request.files?.map((file) => {
+            const splitUrlArray = file?.destination?.split("/");
+            const filteredUrl = splitUrlArray[splitUrlArray.length - 3] + '/' + splitUrlArray[splitUrlArray.length - 2] + '/' + splitUrlArray[splitUrlArray.length - 1] + file.filename;
+            return {
+                documentName: file.originalname,
+                fileUrl: filteredUrl,
+            }
+        }) ?? [];
 
         const dataToInsert = {
-            name, description, title, addedBy: id, contestIds, playedCount
+            name, description, title, addedBy: id, contestIds, playedCount,
+            gamefiles: attachment ?? [],
         }
 
         //Add role in db and send response to client
