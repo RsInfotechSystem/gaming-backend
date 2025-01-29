@@ -34,6 +34,7 @@ const Location = require("../model/location.model")(sequelize, DataTypes);
 const User = require("../model/user.model")(sequelize, DataTypes);
 const Notification = require("../model/notification.model")(sequelize, DataTypes)
 const Game = require("../model/game.model")(sequelize, DataTypes);
+const Player = require("../model/player.model")(sequelize, DataTypes);
 
 // Define associations
 User.belongsTo(Role, { foreignKey: 'roleId', as: 'role' });
@@ -57,4 +58,4 @@ Game.belongsTo(User, { foreignKey: 'updatedBy', as: 'updatedByUser' });
 
 
 
-module.exports = { sequelize, Role, Location, User, Notification, Game }
+module.exports = { sequelize, Role, Location, User, Notification, Game,Player };
