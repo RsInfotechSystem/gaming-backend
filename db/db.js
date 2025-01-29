@@ -41,7 +41,8 @@ User.belongsTo(Location, { foreignKey: 'locationId', as: 'location' });
 
 
 
-Game.belongsTo(User, { foreignKey: 'addedBy', as: 'user' });
+Game.belongsTo(User, { foreignKey: 'addedBy', as: 'addedByUser' });
+Game.belongsTo(User, { foreignKey: 'updatedBy', as: 'updatedByUser' });
 // Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });
 
 //!------------when command is npm run dev----------------------------

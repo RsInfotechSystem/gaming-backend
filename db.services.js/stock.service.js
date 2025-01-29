@@ -114,9 +114,9 @@ const stockServices = {
                     },
                     include: [
                         { model: Location, as: 'location', attributes: ['name', 'id'] },
-                        { model: Block, as: 'block', attributes: ['blockNo', 'id'] },
-                        { model: Category, as: 'category', attributes: ['name', 'id'] },
-                        { model: Brand, as: 'brand', attributes: ['name', 'id'] }
+                        // { model: Block, as: 'block', attributes: ['blockNo', 'id'] },
+                        // { model: Category, as: 'category', attributes: ['name', 'id'] },
+                        // { model: Brand, as: 'brand', attributes: ['name', 'id'] }
                     ]
                 });
             } catch (error) {
