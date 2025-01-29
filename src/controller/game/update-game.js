@@ -1,4 +1,6 @@
 const gameServices = require("../../db.services.js/game.service");
+const runMiddleware = require("../../utils/helper/multer.middleware");
+const { uploadImg } = require("../../utils/multer/upload.img");
 const { updateGameValidation } = require("../../utils/validation/game.validation");
 
 
@@ -6,11 +8,23 @@ const updateGame = async (request, response) => {
     try {
         const { id } = request
 
+        //Upload image file using multer
+        const file = await runMiddleware(request, response, uploadImg.array("gamefiles", 10));
+        if (file) {
+            response.status(200).json({
+                status: "FAILED",
+                message: file?.code,
+            });
+            return;
+        };
+
+        const gameDetails = JSON.parse(request.body.gameDetails);
+
         //extract data from request body
-        const { gameId, name, description, title, contestIds, playedCount } = request.body;
+        const { gameId, name, description, title, contestIds, playedCount, oldGameFiles } = gameDetails;
 
         //check validation
-        const validationResult = await updateGameValidation.validate({ gameId, name, description, title, contestIds, playedCount }, { abortEarly: true });
+        const validationResult = await updateGameValidation.validate({ gameId, name, description, title, contestIds, playedCount, oldGameFiles }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -24,7 +38,7 @@ const updateGame = async (request, response) => {
         if (!isGameExist) {
             return response.status(200).json({
                 status: "FAILED",
-                message: "User does not exist"
+                message: "Game does not exist"
             });
         };
 
@@ -47,14 +61,22 @@ const updateGame = async (request, response) => {
         // };
         // }
 
+        const attachment = request.files?.map((file) => {
+            const splitUrlArray = file?.destination?.split("/");
+            const filteredUrl = splitUrlArray[splitUrlArray.length - 3] + '/' + splitUrlArray[splitUrlArray.length - 2] + '/' + splitUrlArray[splitUrlArray.length - 1] + file.filename;
+            return {
+                documentName: file.originalname,
+                fileUrl: filteredUrl,
+            }
+        }) ?? [];
 
         const dataToInsert = {
-            name, description, title, updatedBy: id, contestIds, playedCount
+            name, description, title, updatedBy: id, contestIds, playedCount,
+            gamefiles: [...attachment, ...oldGameFiles] ?? [],
         }
 
         //Add role in db and send response to client
         const result = await gameServices.updateGame(gameId, dataToInsert);
-        console.log("result : ", result);
 
         if (result) {
             return response.status(200).json({

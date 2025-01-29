@@ -1,3 +1,4 @@
+const multer = require('multer');
 const fileSize = Number(process.env.FILE_SIZE) ?? 2000000 //2MB
 
 //check multer upload file size

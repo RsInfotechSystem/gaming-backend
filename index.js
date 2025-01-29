@@ -5,6 +5,8 @@ const routes = require("./src/routes/routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Middleware
 app.use(cors({ origin: "*" }));
