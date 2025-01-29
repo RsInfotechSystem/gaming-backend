@@ -1,12 +1,12 @@
 const playerServices = require("../../db.services.js/player.service");
-const { createPlayerValidation} = require("../../utils/validation/player.validation");
+const { createPlayerValidation } = require("../../utils/validation/player.validation");
 
 const createPlayer = async (request, response) => {
   try {
     //extract data from request body
     const { name, email, mobile, dob, userName, password, confirmPassword } = request.body;
 
-    if (!name || !email || !mobile || !dob ||  !userName || !password || !confirmPassword) {
+    if (!name || !email || !mobile || !dob || !userName || !password || !confirmPassword) {
       const missingFields = [];
 
       if (!name) missingFields.push("name");
@@ -24,14 +24,14 @@ const createPlayer = async (request, response) => {
     }
 
     if (password !== confirmPassword) {
-        return response.status(200).json({
-            status: "FAILED",
-            message: "Password and Confirm Password does not match",
-    });
+      return response.status(200).json({
+        status: "FAILED",
+        message: "Password and Confirm Password does not match",
+      });
     }
 
     //check validation
-    const validationResult = await createPlayerValidation.validate({ name, email, mobile: mobile?.toString(), dob, password, userName },{ abortEarly: true });
+    const validationResult = await createPlayerValidation.validate({ name, email, mobile: mobile?.toString(), dob, password, userName }, { abortEarly: true });
     if (validationResult.error) {
       response.status(200).json({
         status: "FAILED",
@@ -78,7 +78,7 @@ const createPlayer = async (request, response) => {
     }
   } catch (error) {
     console.log("Error while creating player : ", error);
-    
+
     return response.status(500).json({
       status: "FAILED",
       message: error.message,
