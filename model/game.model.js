@@ -15,28 +15,36 @@ const Game = (Sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        userId : {
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        addedBy: {
             type: DataTypes.UUID,
             references: {
                 model: 'User',
                 key: 'id',
             },
         },
-        title : {
-            type: DataTypes.STRING,
-            allowNull: false,
+        updatedBy: {
+            type: DataTypes.UUID,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
         },
-        playerCount : {
+        // contestId: {
+        //     type: DataTypes.UUID,
+        //     references: {
+        //         model: 'Contest',
+        //         key: 'id',
+        //     },
+        //     defaultValue: [],
+        // },
+        playedCount: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        // coin : {
-        //     type: DataTypes.UUID,
-        //     references: {
-        //         model: 'Coin',
-        //         key: 'id',
-        //     },
-        // },
         isActive: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
@@ -48,7 +56,7 @@ const Game = (Sequelize, DataTypes) => {
         }
     }, {
         paranoid: true,
-        tableName : "Game",
+        tableName: "Game",
         timestamps: true,
     });
 }

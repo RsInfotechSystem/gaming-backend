@@ -1,4 +1,4 @@
-const Game = require("../db/db");
+const { Game } = require("../db/db");
 const countPages = require("../utils/helper/count-pages");
 const limit = Number(process.env.LIMIT) ?? 20; //number of documents have to show per page
 const { Op } = require("sequelize");
@@ -71,7 +71,7 @@ const gameServices = {
       throw error;
     }
   },
-  getGameByName : async (gameName) => {
+  getGameByName: async (gameName) => {
     try {
       return await Game.findOne({
         where: {
@@ -83,47 +83,47 @@ const gameServices = {
       throw error;
     }
   },
-    updateGame: async (gameId, dataToUpdate) => {
-        try {
-        return await Game.update(dataToUpdate, {
-            where: {
+  updateGame: async (gameId, dataToUpdate) => {
+    try {
+      return await Game.update(dataToUpdate, {
+        where: {
+          id: gameId,
+          isDeleted: false,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+  deleteGame: async (gameId) => {
+    try {
+      return await Game.update(
+        {
+          isDeleted: true,
+        },
+        {
+          where: {
             id: gameId,
             isDeleted: false,
-            },
-        });
-        } catch (error) {
-        throw error;
+          },
         }
-    },
-    deleteGame: async (gameId) => {
-        try {
-        return await Game.update(
-            {
-            isDeleted: true,
-            },
-            {
-            where: {
-                id: gameId,
-                isDeleted: false,
-            },
-            }
-        );
-        } catch (error) {
-        throw error;
-        }
-    },
-    getActiveGame : async () => {
-        try {
-        return await Game.findAll({
-            where: {
-            isActive: true,
-            isDeleted: false,
-            },
-        });
-        } catch (error) {
-        throw error;    
-        }
-    },
+      );
+    } catch (error) {
+      throw error;
+    }
+  },
+  getActiveGame: async () => {
+    try {
+      return await Game.findAll({
+        where: {
+          isActive: true,
+          isDeleted: false,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
 
 };
 
