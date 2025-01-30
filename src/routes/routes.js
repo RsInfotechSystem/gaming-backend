@@ -5,6 +5,7 @@ const reportRoutes = require("./report.routes");
 const roleRoutes = require("./role.routes");
 const userRoutes = require("./user.routes");
 const playerRoutes = require("./player.routes");
+const coinRoutes = require("./coin.routes");
 
 const routes = require("express").Router();
 
@@ -14,6 +15,7 @@ routes.use("/location", locationRoutes);
 routes.use("/user", userRoutes);
 routes.use("/game", gameRoutes);
 routes.use("/player", playerRoutes);
+routes.use("/coin", coinRoutes);
 
 // routes.use("/report", reportRoutes);
 routes.use("/notification", notificationRoutes)
