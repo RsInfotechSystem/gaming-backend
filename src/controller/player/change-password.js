@@ -41,7 +41,7 @@ const changePassword = async (request, response) => {
         if(!updatePassword){
             return response.status(200).json({
                 status : "FAILED",
-                message : "unable to updated password",
+                message : "unable to updated password, please try again",
             });
         }else{
             return response.status(200).json({

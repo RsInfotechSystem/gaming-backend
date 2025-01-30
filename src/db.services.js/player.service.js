@@ -100,13 +100,21 @@ const playerServices = {
             throw error;
         }
     },
-    deletePlayer: async (playerId) => {
-        try { 
-            return await Player.update({ isDeleted: true }, { where: { id: playerId, isDeleted: false } });
+    updatePlayerStatus : async (playerId,dataToUpdate) =>{
+      try{
+        return await Player.update(dataToUpdate,{where : {id : playerId}});
+      } catch(error){
+        throw error;
+      } 
+    },
+    deletePlayerPermanently: async (playerId) => {
+        try {
+            return await Player.destroy({ where: { id: playerId } });
         } catch (error) {
             throw error;
-        } 
+        }
     },
+
 }
 
 module.exports = playerServices;

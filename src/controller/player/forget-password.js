@@ -14,8 +14,8 @@ const forgetPassword = async (request, response) => {
         }
 
         // check if player exist with email
-        const player = await playerServices.getPlayerByEmail(email);
-        if(!player){
+        const isPlayerExist = await playerServices.getPlayerByEmail(email);
+        if(!isPlayerExist){
             return response.status(200).json({
                 status : "FAILED",
                 message : "Player not found",
@@ -23,7 +23,7 @@ const forgetPassword = async (request, response) => {
         }
 
         // check if username and email are of same player
-        if(player.userName !== userName){
+        if(isPlayerExist.userName !== userName){
             return response.status(200).json({
                 status : "FAILED",
                 message : "Username and email does not match",
@@ -34,15 +34,15 @@ const forgetPassword = async (request, response) => {
 
         // send email to player for changing password
 
-        const dataToSend = {
-            name : player.name,
-            userName : player.userName,
-            resetUrl : `http://localhost:8000/player/change-password?token=${token}`,
-        };
-
-        // if(process.env.NODE_ENV === "production"){
+          // if(process.env.NODE_ENV === "production"){
         //     dataToSend.resetUrl = "https://gaming-platform/reset-password";
         // }
+
+        const dataToSend = {
+            name : isPlayerExist.name,
+            userName : isPlayerExist.userName,
+            resetUrl : `http://localhost:8000/player/change-password?token=${token}`,
+        };
 
             // send email to player
             await sendEmail(email, dataToSend);

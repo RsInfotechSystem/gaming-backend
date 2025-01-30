@@ -1,14 +1,15 @@
 const playerServices = require("../../db.services.js/player.service");
+const bcrypt = require("bcrypt");
 
 const resetPassword = async (request, response) => {
     try{
         //extract data from request body
         const { playerId,oldPassword, newPassword} = request.body;
 
-        if (!playerId || !password) {
+        if (!playerId || !oldPassword || !newPassword) {
                 return response.status(200).json({
                 status: "FAILED",
-                message: "Player Id and password is required",
+                message: "Player Id and oldpassword and newpassword is required",
             });
         }
 
@@ -21,7 +22,7 @@ const resetPassword = async (request, response) => {
             });
         }
 
-        //Check if player is active or not
+         //Check if player is active or not
         if (isPlayerExist?.isActive === false) {
             return response.status(200).json({
                 status: "FAILED",
@@ -29,8 +30,17 @@ const resetPassword = async (request, response) => {
             });
         }
 
+        //Check if old password matches with the password in the database
+        const matchPassword = await bcrypt.compare(oldPassword, isPlayerExist.password);
+        if (!matchPassword) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "Incorrect old password",
+            });
+        }
+        
         const dataToUpdate = {
-            password,
+            password : newPassword,
         };
 
         const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);
@@ -52,3 +62,5 @@ const resetPassword = async (request, response) => {
         });
     }
 }
+
+module.exports = resetPassword;

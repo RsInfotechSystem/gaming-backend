@@ -40,6 +40,11 @@ const Player = (sequelize, DataTypes) => {
         defaultValue: false,
         allowNull: false,
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
     },
     {
       timestamps: true,

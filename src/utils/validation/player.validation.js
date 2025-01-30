@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-exports.createPlayerValidation = Joi.object({
+exports.createPlayerValidation = Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     mobile: Joi.string().regex(/^[0-9]{10}$/).required(),

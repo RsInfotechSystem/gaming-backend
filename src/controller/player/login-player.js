@@ -1,6 +1,7 @@
 const playerServices = require("../../db.services.js/player.service");
 const {loginPlayerValidation} = require("../../utils/validation/player.validation");
 const generateUserJWT = require("../../utils/middleware/generate-token");
+const bcrypt = require("bcrypt");
 
 const loginPlayer = async (request, response) => {
   try {
@@ -29,6 +30,8 @@ const loginPlayer = async (request, response) => {
 
     //check player already exist or not
     const isPlayerExist = await playerServices.getPlayerByEmail(email);
+    console.log("isPlayerExist : ", isPlayerExist);
+    
     if (!isPlayerExist) {
       return response.status(200).json({
         status: "FAILED",
@@ -44,7 +47,14 @@ const loginPlayer = async (request, response) => {
       });
     }
 
-    if (isPlayerExist.password == password) {
+    const matchPassword = await bcrypt.compare(password, isPlayerExist.password);
+    if (!matchPassword) {
+      return response.status(200).json({
+        status: "FAILED",
+        message: "Incorrect password",
+      });
+    }
+
         const token = generateUserJWT(isPlayerExist.id, isPlayerExist.name, isPlayerExist?.email, isPlayerExist?.mobile, isPlayerExist?.dob, isPlayerExist?.userName);
         if (token) {
           return response.status(200).json({
@@ -53,18 +63,12 @@ const loginPlayer = async (request, response) => {
             token,
             userDetails: isPlayerExist,
           });
-        }
-    }else{
+        }else{
         return response.status(200).json({
             status: "FAILED",
             message: "Incorrect password",
         });
     }
-    return response.status(200).json({
-      status: "SUCCESS",
-      message: "Player login successfully",
-    });
-
   } catch (error) {
     console.log("Error while creating player : ", error);
     return response.status(500).json({

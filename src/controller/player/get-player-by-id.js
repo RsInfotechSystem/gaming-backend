@@ -24,8 +24,8 @@ const getPlayerById = async (request , response) => {
             return;
         }
 
-        const player = await playerServices.getPlayerById(id);
-        if(!player){
+        const isPlayerExist = await playerServices.getPlayerById(id);
+        if(!isPlayerExist){
             return response.status(200).json({
                 status : "FAILED",
                 message : "Player does not exist",
@@ -34,7 +34,7 @@ const getPlayerById = async (request , response) => {
         return response.status(200).json({
             status : "SUCCESS",
             message : "Player found successfully",
-            player,
+            player:isPlayerExist,
         });
     }catch(error){
         console.log("Error while getting player by id : ",error);
