@@ -1,7 +1,7 @@
 const gameRoutes = require("./game.routes");
 const locationRoutes = require("./location.routes");
 const notificationRoutes = require("./notification.routes");
-const reportRoutes = require("./report.routes");
+const contestRoutes = require("./contest.routes");
 const roleRoutes = require("./role.routes");
 const userRoutes = require("./user.routes");
 const playerRoutes = require("./player.routes");
@@ -16,8 +16,7 @@ routes.use("/user", userRoutes);
 routes.use("/game", gameRoutes);
 routes.use("/player", playerRoutes);
 routes.use("/coin", coinRoutes);
-
-// routes.use("/report", reportRoutes);
-routes.use("/notification", notificationRoutes)
+routes.use("/contest", contestRoutes);
+// routes.use("/notification", notificationRoutes)
 
 module.exports = routes;
