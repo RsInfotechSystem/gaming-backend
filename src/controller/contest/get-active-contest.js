@@ -1,20 +1,20 @@
-const roleServices = require("../../db.services.js/role.service");
+const contestServices = require("../../db.services.js/contest.service");
 
 
-const rolesList = async (request, response) => {
+const getActiveContest = async (request, response) => {
     try {
         //get data from db & send response to client
-        const result = await roleServices.getActiveRole();
+        const result = await contestServices.getActiveContest();
         if (result?.length > 0) {
             return response.status(200).json({
                 status: "SUCCESS",
-                message: "Role fetched successfully.",
-                roles: result
+                message: "Contest fetched successfully.",
+                contests: result
             });
         } else {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Role does not exist."
+                message: "Contest does not exist."
             });
         };
     } catch (error) {
@@ -26,4 +26,4 @@ const rolesList = async (request, response) => {
 };
 
 
-module.exports = rolesList
+module.exports = getActiveContest

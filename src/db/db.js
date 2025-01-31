@@ -35,6 +35,7 @@ const User = require("../model/user.model")(sequelize, DataTypes);
 const Notification = require("../model/notification.model")(sequelize, DataTypes)
 const Game = require("../model/game.model")(sequelize, DataTypes);
 const Coin = require("../model/coin.model")(sequelize, DataTypes);
+const Contest = require("../model/contest.model")(sequelize, DataTypes);
 const Player = require("../model/player.model")(sequelize, DataTypes);
 
 // Define associations
@@ -45,7 +46,12 @@ User.belongsTo(Location, { foreignKey: 'locationId', as: 'location' });
 
 Game.belongsTo(User, { foreignKey: 'addedBy', as: 'addedByUser' });
 Game.belongsTo(User, { foreignKey: 'updatedBy', as: 'updatedByUser' });
-// Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });
+
+Contest.belongsTo(Game, { foreignKey: 'gameId', as: 'game' });
+// Contest.belongsTo(Player, { foreignKey: 'joinedPlayers', as: 'players' });
+Contest.belongsTo(User, { foreignKey: 'createdBy', as: 'createdByUser' });
+Contest.belongsTo(User, { foreignKey: 'updatedBy', as: 'updatedByUser' });
+// Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });   
 
 //!------------when command is npm run dev----------------------------
 //? No need of this code, remove it
@@ -59,4 +65,4 @@ Game.belongsTo(User, { foreignKey: 'updatedBy', as: 'updatedByUser' });
 
 
 
-module.exports = { sequelize, Role, Location, User, Notification, Game, Player, Coin };
+module.exports = { sequelize, Role, Location, User, Notification, Game, Player, Coin, Contest };
