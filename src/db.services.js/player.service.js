@@ -109,7 +109,7 @@ const playerServices = {
     },
     deletePlayerPermanently: async (playerId) => {
         try {
-            return await Player.destroy({ where: { id: playerId } });
+            return await Player.destroy({ where: { id: playerId },force: true});
         } catch (error) {
             throw error;
         }

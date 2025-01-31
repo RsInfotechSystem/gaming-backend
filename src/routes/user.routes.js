@@ -8,6 +8,8 @@ const login = require("../controller/user/login");
 const updateUser = require("../controller/user/update-user");
 const authenticateUserJWT = require("../utils/middleware/auth");
 const tabAccessMiddleware = require("../utils/middleware/tab-access-middleware");
+const resetPassword = require("../controller/user/reset-passwrod");
+const changePassword = require("../controller/user/change-password");
 
 const userRoutes = require("express").Router();
 
@@ -19,6 +21,9 @@ userRoutes.post("/get-user-by-id", authenticateUserJWT, tabAccessMiddleware("use
 userRoutes.post("/update-user", authenticateUserJWT, tabAccessMiddleware("user management"), updateUser);
 userRoutes.post("/change-user-status", authenticateUserJWT, tabAccessMiddleware("user management"), changeUserStatus)
 userRoutes.post("/delete-user", authenticateUserJWT, tabAccessMiddleware("user management"), deleteSelectedUser)
+userRoutes.post("/reset-password", authenticateUserJWT, resetPassword);
+userRoutes.post("/change-password", authenticateUserJWT, changePassword);
+
 // userRoutes.post("/get-location-wise-users", authenticateUserJWT, getLocationWiseUser);
 
 

@@ -35,3 +35,7 @@ exports.updateUserValidation = Joi.object().keys({
 exports.userIdsValidationSchema = Joi.object().keys({
     userIds: Joi.array().min(1).items(Joi.string().length(36).required()).required()
 })
+
+exports.resetPasswordValidationSchema = Joi.object().keys({
+    userId: Joi.string().length(36).required(),
+})

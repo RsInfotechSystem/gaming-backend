@@ -38,9 +38,11 @@ const resetPassword = async (request, response) => {
                 message: "Incorrect old password",
             });
         }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
         
         const dataToUpdate = {
-            password : newPassword,
+            password : hashedPassword,
         };
 
         const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);

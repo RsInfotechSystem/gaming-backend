@@ -1,31 +1,23 @@
-const playerServices = require("../../db.services.js/player.service");
-const bcrypt = require('bcrypt');
+const userServices = require("../../db.services.js/user.service");
+const  bcrypt = require('bcrypt');
 
-const changePassword = async (request, response) => {
-    try{ 
-        const {email,newPassword, confirmNewPassword} = request.body;
+const changePassword = async (request, response) =>{
+    try{
+        const {email, newPassword, confirmNewPassword} = request.body;
 
-        if(!email){
+        if(!email || !newPassword || !confirmNewPassword){
             return response.status(200).json({
                 status : "FAILED",
-                message : "email not found",
+                message : "Please provide userId, new password and confirm new password",
             });
         }
 
-        if( !newPassword || !confirmNewPassword){
+        // check if user exist with userId
+        const isUserExistser = await userServices.getUserByEmail(email);
+        if(!isUserExistser){
             return response.status(200).json({
                 status : "FAILED",
-                message : "Please provide new password and confirm New Password",
-            });
-        }
-        // const email = jwt.verify(token, process.env.JWT_SECRET_KEY).email;
-
-        // check if player exist with email 
-        const player = await playerServices.getPlayerByEmail(email);
-        if(!player){
-            return response.status(200).json({
-                status : "FAILED",
-                message : "Player not found",
+                message : "User not found",
             });
         }
 
@@ -38,13 +30,16 @@ const changePassword = async (request, response) => {
         }
 
         const hashPassword = await bcrypt.hash(newPassword, 12);
-        newPassword = hashPassword;
-        
-        const updatePassword = await playerServices.updatePlayerPassword(email, newPassword);
-        if(!updatePassword){
+
+        const dataToUpdate ={
+            password : hashPassword,
+        }
+
+        const updatedPassword = await userServices.updateUserDetails({userId:isUserExistser.userId}, dataToUpdate);
+        if(!updatedPassword){
             return response.status(200).json({
                 status : "FAILED",
-                message : "unable to updated password, please try again",
+                message : "Unable to update password, please try again",
             });
         }else{
             return response.status(200).json({

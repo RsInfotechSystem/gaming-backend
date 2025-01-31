@@ -23,10 +23,10 @@ const sendEmail = async (email, dataToSend) => {
     to: email,
     subject: "Request for password reset",
     html: `<h1>Reset Your Password</h1>
-                <p>Dear ${dataToSend.name},</p>
-                <p>You have requested to reset your password. With User Name ${dataToSend.userName}</p>
+                <p>Dear ${dataToSend?.name},</p>
+                <p>You have requested to reset your password. With User Name ${dataToSend?.userName}</p>
                 <p>Please click the link below to reset your password:</p>
-                <p><a href="${dataToSend.resetUrl}">Reset Password</a></p>
+                <p><a href="${dataToSend?.resetUrl}">Reset Password</a></p>
                 <p>If you did not request this, please ignore this email.</p>
                 <p>Thank you,</p>
                 <p>Gaming Platform</p>`,

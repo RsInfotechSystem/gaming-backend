@@ -32,17 +32,19 @@ const forgetPassword = async (request, response) => {
 
         const token = jwt.sign({email}, process.env.JWT_SECRET_KEY, {expiresIn : "1h"});
 
+
+        const dataToSend = {
+            name : isPlayerExist.name,
+            userName : isPlayerExist.userName,
+            resetUrl : `http://localhost:8000/player/change-password`,
+        };
+
+        
         // send email to player for changing password
 
           // if(process.env.NODE_ENV === "production"){
         //     dataToSend.resetUrl = "https://gaming-platform/reset-password";
         // }
-
-        const dataToSend = {
-            name : isPlayerExist.name,
-            userName : isPlayerExist.userName,
-            resetUrl : `http://localhost:8000/player/change-password?token=${token}`,
-        };
 
             // send email to player
             await sendEmail(email, dataToSend);

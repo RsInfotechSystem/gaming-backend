@@ -66,7 +66,7 @@ const loginPlayer = async (request, response) => {
         }else{
         return response.status(200).json({
             status: "FAILED",
-            message: "Incorrect password",
+            message: "Failed to generate token, please again!",
         });
     }
   } catch (error) {
