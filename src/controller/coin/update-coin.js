@@ -5,11 +5,10 @@ const { updateCoinValidation } = require("../../utils/validation/coin.validation
 const updateCoin = async (request, response) => {
     try {
         //extract data from request body
-        const { coinId, valuePerCoin } = request.body;
-        console.log("valuePerCoin : ", valuePerCoin)
+        const { coinId, coinsCount, rupeesAmt } = request.body;
 
         //check validation
-        const validationResult = await updateCoinValidation.validate({ coinId, valuePerCoin }, { abortEarly: true });
+        const validationResult = await updateCoinValidation.validate({ coinId, coinsCount, rupeesAmt }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -34,7 +33,7 @@ const updateCoin = async (request, response) => {
         // }
 
         //Add role in db and send response to client
-        const result = await coinServices.updateCoin(coinId, { valuePerCoin: valuePerCoin });
+        const result = await coinServices.updateCoin(coinId, { coinsCount, rupeesAmt });
         console.log("result : ", result);
 
         if (result) {

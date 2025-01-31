@@ -7,9 +7,15 @@ const Coin = (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false
         },
-        valuePerCoin: {
+        coinsCount: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            defaultValue: 0
+        },
+        rupeesAmt: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         },
     }, {
         paranoid: true,

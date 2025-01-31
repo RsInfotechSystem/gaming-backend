@@ -5,10 +5,10 @@ const { deleteCoinValidation } = require("../../utils/validation/coin.validation
 const deleteCoin = async (request, response) => {
     try {
         //extract data from request body
-        const { coinId } = request.body;
+        const { coinIds } = request.body;
 
         //check validation
-        const validationResult = await deleteCoinValidation.validate({ coinId }, { abortEarly: true });
+        const validationResult = await deleteCoinValidation.validate({ coinIds }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -17,23 +17,23 @@ const deleteCoin = async (request, response) => {
             return;
         }
 
-        //check coin already exist 
-        const isCoinExist = await coinServices.getCoinById(coinId)
-        if (!isCoinExist) {
-            response.status(200).json({
-                status: "FAILED",
-                message: "Coin does not exist",
-            });
-            return;
-        }
-
-        // const dataToInsert = {
-        //     name: name?.toLowerCase(),
-        //     tab
-        // }
+        const arrayLength = coinIds?.length;
+        for (let i = 0; i < arrayLength; i++) {
+            const coinId = coinIds[i];
+            console.log(" coinId : ", coinId)
+            //check coin already exist 
+            const isCoinExist = await coinServices.getCoinById(coinId)
+            if (!isCoinExist) {
+                response.status(200).json({
+                    status: "FAILED",
+                    message: "Coin doesdoes not exist",
+                });
+                return;
+            }
+        };
 
         //Add role in db and send response to client
-        const result = await coinServices.deleteCoin(coinId);
+        const result = await coinServices.deleteCoin(coinIds);
 
         if (result) {
             return response.status(200).json({
@@ -47,7 +47,6 @@ const deleteCoin = async (request, response) => {
             });
         }
     } catch (error) {
-        console.log("FAILEDFAILEDFAILEDFAILEDFAILEDFAILEDFAILED : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,
