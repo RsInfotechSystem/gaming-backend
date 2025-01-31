@@ -32,12 +32,12 @@ const coinServices = {
             throw error;
         }
     },
-    deleteCoin: async (coinId) => {
+    deleteCoin: async (coinIds) => {
         try {
             // Convert coinIds to an array of UUIDs if necessary
             const result = await Coin.destroy({
                 where: {
-                    id: coinId
+                    id: coinIds
                 }
             });
             return result; // Number of deleted rows
