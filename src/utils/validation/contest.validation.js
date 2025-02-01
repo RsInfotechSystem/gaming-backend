@@ -36,3 +36,9 @@ exports.contestIdsValidationSchema = Joi.object().keys({
     contestIds: Joi.array().min(1).items(Joi.string().length(36).required()).required()
 })
 
+exports.joinContestValidation = Joi.object().keys({
+    contestId: Joi.string().length(36).required(),
+    gameUserName: Joi.string().required(),
+})
+
+

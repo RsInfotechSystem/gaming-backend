@@ -1,20 +1,20 @@
 const playerServices = require("../../db.services.js/player.service");
-const { updatePlayerValidation} = require("../../utils/validation/player.validation");
+const { updatePlayerValidation } = require("../../utils/validation/player.validation");
 
 const updatePlayer = async (request, response) => {
-    try{
+    try {
         //extract data from request body
-        const { playerId, name, email, mobile, dob, userName} = request.body;
+        const { playerId, name, email, mobile, dob, userName, availableCoins } = request.body;
 
-        if (!playerId ) {
-                return response.status(200).json({
+        if (!playerId) {
+            return response.status(200).json({
                 status: "FAILED",
                 message: "Player Id is required",
             });
         }
 
         //check validation
-        const validationResult = await updatePlayerValidation.validate({ playerId, name, email, mobile: mobile?.toString(), dob, userName },{ abortEarly: true });
+        const validationResult = await updatePlayerValidation.validate({ playerId, name, email, mobile: mobile?.toString(), dob, userName }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -42,31 +42,31 @@ const updatePlayer = async (request, response) => {
 
 
         const dataToUpdate = {
-        name,
-        email,
-        mobile,
-        dob,
-        userName,
+            name,
+            email,
+            mobile,
+            dob,
+            userName,
+            availableCoins
         };
 
         const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);
-        if(updatedPlayer && updatedPlayer[0] > 0){
+        if (updatedPlayer && updatedPlayer[0] > 0) {
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Player updated successfully",
             });
-        }else{
+        } else {
             return response.status(200).json({
                 status: "FAILED",
                 message: "Player not updated",
             });
         }
-    }catch(error){
-    console.log("Error while creating player : ", error);
-    return response.status(500).json({
-      status: "FAILED",
-      message: error.message,
-    });
+    } catch (error) {
+        return response.status(500).json({
+            status: "FAILED",
+            message: error.message,
+        });
     }
 }
 
