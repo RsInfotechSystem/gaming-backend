@@ -35,6 +35,11 @@ const Player = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    availableCoins: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
