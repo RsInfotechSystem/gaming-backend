@@ -10,46 +10,36 @@ const playerServices = {
     } catch (error) {
       // console.log("error while creation : ", error)
 
-      throw error;
-    }
-  },
-  getPlayerByEmail: async (email) => {
-    try {
-      return await Player.findOne({
-        where: { email: email?.toLowerCase(), isDeleted: false },
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  getPlayerById: async (playerId) => {
-    try {
-      return await Player.findOne({
-        where: { id: playerId, isDeleted: false },
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  getPlayerByEmailAndMobile: async (email, mobile) => {
-    try {
-      return await Player.findOne({
-        where: {
-          email: email?.toLowerCase(),
-          mobile: mobile?.toString(),
-          isDeleted: false,
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  getPlayerList: async (page = 1, searchString) => {
-    try {
-      // Build filter object for Sequelize
-      let filter = {
-        isDeleted: false,
-      };
+            throw error;
+        }
+    },
+    getPlayerByEmail: async (email) => {
+        try {
+            return await Player.findOne({ where: { email: email?.toLowerCase(), isDeleted: false } });
+        } catch (error) {
+            throw error
+        }
+    },
+    getPlayerById: async (playerId) => {
+        try {
+            return await Player.findOne({ where: { id: playerId, isDeleted: false } });
+        } catch (error) {
+            throw error;
+        }
+    },
+    getPlayerByEmailAndMobile: async (email, mobile) => {
+        try {
+            return await Player.findOne({ where: { email: email?.toLowerCase(), mobile: mobile?.toString(), isDeleted: false } });
+        } catch (error) {
+            throw error;
+        }
+    },
+    getPlayerList: async (page = 1, searchString) => {
+        try {
+            // Build filter object for Sequelize
+            let filter = {
+                isDeleted: false,
+            };
 
       // Add $or condition if searchString is provided
       if (searchString) {
@@ -74,8 +64,59 @@ const playerServices = {
       // Count total records
       const totalRecords = await Player.count({ where: filter });
 
-      // Calculate total pages
-      const totalPages = await countPages(totalRecords, limit);
+            // Calculate total pages
+            const totalPages = await countPages(totalRecords);
+
+            // Fetch records
+            const players = await Player.findAll({
+                where: filter,
+                limit: limit,
+                offset: (page - 1) * limit,
+                order: [["createdAt", "DESC"]],
+            });
+
+            return {
+                players,
+                totalPages,
+                totalRecords
+            };
+        } catch (error) {
+            throw error;
+        }
+    },
+    getContestWisePlayerList: async (page = 1, searchString, playersArray) => {
+        try {
+            // Build filter object for Sequelize
+            let filter = {
+                isDeleted: false,
+                id: { [Op.in]: playersArray }
+            };
+
+            // Add $or condition if searchString is provided
+            if (searchString) {
+                filter[Op.or] = [
+                    {
+                        name: {
+                            [Op.iLike]: `%${searchString}%` // Case-insensitive LIKE operator
+                        }
+                    },
+                    {
+                        userName: {
+                            [Op.iLike]: `%${searchString}%` // PostgreSQL specific operator for array containment
+                        }
+                    }
+                ];
+            }
+
+            if (page < 1) {
+                page = 1
+            };
+
+            // Count total records
+            const totalRecords = await Player.count({ where: filter });
+
+            // Calculate total pages
+            const totalPages = await countPages(totalRecords);
 
       // Fetch records
       const players = await Player.findAll({
@@ -85,45 +126,38 @@ const playerServices = {
         order: [["createdAt", "DESC"]],
       });
 
-      return {
-        players,
-        totalPages,
-        totalRecords,
-      };
-    } catch (error) {
-      throw error;
-    }
-  },
-  updatePlayer: async (playerId, dataToUpdate) => {
-    try {
-      return await Player.update(dataToUpdate, {
-        where: { id: playerId, isDeleted: false },
-      });
-    } catch (error) {
-      throw error;
-    }
-  },
-  updatePlayerPassword: async (email, password) => {
-    try {
-      return await Player.update({ password }, { where: { email: email } });
-    } catch (error) {
-      throw error;
-    }
-  },
-  updatePlayerStatus: async (playerId, dataToUpdate) => {
-    try {
-      return await Player.update(dataToUpdate, { where: { id: playerId } });
-    } catch (error) {
-      throw error;
-    }
-  },
-  deletePlayerPermanently: async (playerId) => {
-    try {
-      return await Player.destroy({ where: { id: playerId }, force: true });
-    } catch (error) {
-      throw error;
-    }
-  },
-};
+            return {
+                players,
+                totalPages,
+                totalRecords
+            };
+        } catch (error) {
+            throw error;
+        }
+    },
+    updatePlayer: async (playerId, dataToUpdate) => {
+        try {
+            return await Player.update(dataToUpdate, {
+                where: { id: playerId, isDeleted: false }
+            });
+        } catch (error) {
+            throw error;
+        }
+    },
+    updatePlayerPassword: async (email, newPassword) => {
+        try {
+            return await Player.update({ password: newPassword }, { where: { email: email, isDeleted: false } });
+        } catch (error) {
+            throw error;
+        }
+    },
+    deletePlayer: async (playerId) => {
+        try {
+            return await Player.update({ isDeleted: true }, { where: { id: playerId, isDeleted: false } });
+        } catch (error) {
+            throw error;
+        }
+    },
+}
 
 module.exports = playerServices;

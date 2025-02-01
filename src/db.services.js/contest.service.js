@@ -83,6 +83,42 @@ const contestServices = {
             throw error;
         }
     },
+    getJoinedContestList: async (page = 1, searchString, contestArray) => {
+        try {
+            const filter = {
+                isDeleted: false,
+                id: { [Op.in]: contestArray } // Filter contests based on ID array
+            };
+
+            if (searchString) {
+                filter[Op.or] = [
+                    { name: { [Op.iLike]: `%${searchString}%` } },
+                    { description: { [Op.iLike]: `%${searchString}%` } }
+                ];
+            }
+
+            // Count total records for pagination
+            const totalRecords = await Contest.count({ where: filter });
+
+            // Fetch paginated records
+            const contestList = await Contest.findAll({
+                where: filter,
+                order: [["updatedAt", "DESC"]],
+                limit: limit,
+                offset: (page - 1) * limit,
+            });
+
+            // Calculate total pages
+            const totalPages = await countPages(totalRecords);
+
+            return {
+                totalPages,
+                contestList,
+            };
+        } catch (error) {
+            throw error;
+        }
+    },
     getContestByName: async (name) => {
         try {
             return await Contest.findOne({

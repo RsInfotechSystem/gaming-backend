@@ -40,6 +40,16 @@ const Player = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    availableCoins: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+    },
+    joinedContests: {
+      type: DataTypes.JSONB,  // Store as an array of player UUIDs
+      allowNull: false,
+      defaultValue: [],  // Ensure an empty array as default
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
