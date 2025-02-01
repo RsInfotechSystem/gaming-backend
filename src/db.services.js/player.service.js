@@ -1,4 +1,4 @@
-const {Player} = require("../db/db");
+const { Player } = require("../db/db");
 const limit = Number(process.env.LIMIT) ?? 20  //number of documents have to show per page
 const { Op } = require('sequelize');
 const countPages = require("../utils/helper/count-pages");
@@ -27,7 +27,7 @@ const playerServices = {
             throw error;
         }
     },
-    getPlayerByEmailAndMobile : async (email,mobile) => {
+    getPlayerByEmailAndMobile: async (email, mobile) => {
         try {
             return await Player.findOne({ where: { email: email?.toLowerCase(), mobile: mobile?.toString(), isDeleted: false } });
         } catch (error) {
@@ -65,7 +65,58 @@ const playerServices = {
             const totalRecords = await Player.count({ where: filter });
 
             // Calculate total pages
-            const totalPages = countPages(totalRecords, limit);
+            const totalPages = await countPages(totalRecords);
+
+            // Fetch records
+            const players = await Player.findAll({
+                where: filter,
+                limit: limit,
+                offset: (page - 1) * limit,
+                order: [["createdAt", "DESC"]],
+            });
+
+            return {
+                players,
+                totalPages,
+                totalRecords
+            };
+        } catch (error) {
+            throw error;
+        }
+    },
+    getContestWisePlayerList: async (page = 1, searchString, playersArray) => {
+        try {
+            // Build filter object for Sequelize
+            let filter = {
+                isDeleted: false,
+                id: { [Op.in]: playersArray }
+            };
+
+            // Add $or condition if searchString is provided
+            if (searchString) {
+                filter[Op.or] = [
+                    {
+                        name: {
+                            [Op.iLike]: `%${searchString}%` // Case-insensitive LIKE operator
+                        }
+                    },
+                    {
+                        userName: {
+                            [Op.iLike]: `%${searchString}%` // PostgreSQL specific operator for array containment
+                        }
+                    }
+                ];
+            }
+
+            if (page < 1) {
+                page = 1
+            };
+
+            // Count total records
+            const totalRecords = await Player.count({ where: filter });
+
+            // Calculate total pages
+            const totalPages = await countPages(totalRecords);
 
             // Fetch records
             const players = await Player.findAll({
@@ -93,7 +144,7 @@ const playerServices = {
             throw error;
         }
     },
-    updatePlayerPassword : async (email, newPassword) => {
+    updatePlayerPassword: async (email, newPassword) => {
         try {
             return await Player.update({ password: newPassword }, { where: { email: email, isDeleted: false } });
         } catch (error) {
@@ -101,11 +152,11 @@ const playerServices = {
         }
     },
     deletePlayer: async (playerId) => {
-        try { 
+        try {
             return await Player.update({ isDeleted: true }, { where: { id: playerId, isDeleted: false } });
         } catch (error) {
             throw error;
-        } 
+        }
     },
 }
 

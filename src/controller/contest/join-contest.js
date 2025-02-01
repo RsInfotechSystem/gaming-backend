@@ -47,6 +47,14 @@ const joinContest = async (request, response) => {
             });
         }
 
+        if (isContestExist?.dataValues?.joinedPlayers.includes(id)) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "You have already joined this contest",
+            });
+        }
+
+        // if (isContestExist?.dataValues?.joinedPlayers.includes(id))
         let allPlayers = [...isContestExist?.dataValues?.joinedPlayers, id]
 
         if (isContestExist?.dataValues?.playersLimit < allPlayers?.length) {
@@ -65,7 +73,7 @@ const joinContest = async (request, response) => {
 
         if (result) {
             let availableCoins = isPlayerExist?.dataValues?.availableCoins - isContestExist?.dataValues?.reqCoinsToJoin
-            const updatedPlayer = await playerServices.updatePlayer(id, { availableCoins: availableCoins });
+            const updatedPlayer = await playerServices.updatePlayer(id, { availableCoins: availableCoins, joinedContests: [...isPlayerExist?.dataValues?.joinedContests, contestId] });
 
             return response.status(200).json({
                 status: "SUCCESS",
