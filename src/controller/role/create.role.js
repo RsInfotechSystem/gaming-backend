@@ -34,7 +34,7 @@ const createRole = async (request, response) => {
 
         //Add role in db and send response to client
         const result = await roleServices.createRole(dataToInsert);
-        console.log("result : ", result);
+        // console.log("result : ", result);
 
         if (result) {
             return response.status(200).json({
@@ -48,7 +48,7 @@ const createRole = async (request, response) => {
             });
         }
     } catch (error) {
-        console.log("error : ", error)
+        // console.log("error : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,

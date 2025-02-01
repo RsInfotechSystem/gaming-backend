@@ -112,7 +112,8 @@ const roleServices = {
             const result = await Role.destroy({
                 where: {
                     id: roleIds
-                }
+                },
+                force: true
             });
 
             return result; // Number of deleted rows

@@ -37,7 +37,6 @@ const login = async (request, response) => {
         }
 
         const matchPassword = await bcrypt.compare(password, isUserExist.password);
-        console.log("matchPassword : ", matchPassword);
         
         if (!matchPassword) {
             return response.status(200).json({

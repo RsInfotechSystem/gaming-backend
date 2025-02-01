@@ -9,7 +9,7 @@ const forgetPassword = async (request, response) => {
         if(!userId||!email){
             return response.status(200).json({
                 status : "FAILED",
-                message : "Please provide userId and email",
+                message : "Please provide userId and email",    
             });
         }
 
@@ -33,10 +33,9 @@ const forgetPassword = async (request, response) => {
         const dataToSend = {
             name : isUserExist.name,
             userName : isUserExist.userId,
-            resetUrl : `http://localhost:8000/user/change-password`,
+            resetUrl : `http://localhost:8000/user/change-password-form?token=${token}`,
         };
 
-        
         // send email to player for changing password
 
           // if(process.env.NODE_ENV === "production"){
@@ -45,6 +44,7 @@ const forgetPassword = async (request, response) => {
 
         // send email to user for changing password
         await sendEmail(isUserExist.email, dataToSend);
+        
         return response.status(200).json({
             status : "SUCCESS",
             message : "Email sent successfully",
@@ -58,3 +58,5 @@ const forgetPassword = async (request, response) => {
         });
     }
 }
+
+module.exports = forgetPassword;

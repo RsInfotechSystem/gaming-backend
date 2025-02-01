@@ -1,58 +1,70 @@
 const userServices = require("../../db.services.js/user.service");
-const  bcrypt = require('bcrypt');
+const {resetPasswordValidationSchema} = require("../../utils/validation/user.validation");
+const bcrypt = require("bcrypt");
 
 const changePassword = async (request, response) =>{
     try{
-        const {email, newPassword, confirmNewPassword} = request.body;
-
-        if(!email || !newPassword || !confirmNewPassword){
+        const { userId, oldPassword, newPassword } = request.body;
+        
+        if(!userId || !oldPassword || !newPassword){
             return response.status(200).json({
-                status : "FAILED",
-                message : "Please provide userId, new password and confirm new password",
+                status: "FAILED",
+                message: "User Id, old password, and new password are required."
             });
         }
 
-        // check if user exist with userId
-        const isUserExistser = await userServices.getUserByEmail(email);
-        if(!isUserExistser){
+        const validationResult = await resetPasswordValidationSchema.validate({ userId }, { abortEarly: true });
+        if(validationResult.error){
             return response.status(200).json({
-                status : "FAILED",
-                message : "User not found",
+                status: "FAILED",
+                message: validationResult?.error?.details[0]?.message
             });
         }
 
-        // check if new password and confirm new password are same
-        if(newPassword !== confirmNewPassword){
+        const isUserExist = await userServices.getUserByObjId(userId);
+        if(!isUserExist){
             return response.status(200).json({
-                status : "FAILED",
-                message : "New password and confirm new password does not match",
+                status: "FAILED",
+                message: "User does not exist."
             });
         }
 
-        const hashPassword = await bcrypt.hash(newPassword, 12);
-
-        const dataToUpdate ={
-            password : hashPassword,
+        if(isUserExist?.isActive === false){
+            return response.status(200).json({
+                status: "FAILED",
+                message: "You cannot update a disabled user."
+            });
         }
 
-        const updatedPassword = await userServices.updateUserDetails({userId:isUserExistser.userId}, dataToUpdate);
-        if(!updatedPassword){
+        const matchPassword = await bcrypt.compare(oldPassword, isUserExist.password);
+        if(!matchPassword){
             return response.status(200).json({
-                status : "FAILED",
-                message : "Unable to update password, please try again",
+                status: "FAILED",
+                message: "Enter Correct Old Password."
+            });
+        }   
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        const dataToUpdate = {
+            password: hashedPassword
+        };
+
+        const updatedUser = await userServices.updateUserDetails(userId, dataToUpdate);
+        if(updatedUser && updatedUser[0] > 0){
+            return response.status(200).json({
+                status: "SUCCESS",
+                message: "Password updated successfully."
             });
         }else{
             return response.status(200).json({
-                status : "SUCCESS",
-                message : "Password updated successfully",
+                status: "FAILED",
+                message: "Failed to update password."
             });
         }
-
     }catch(error){
-        console.log("Error while changing password : ",error);
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message,
+            status: "FAILED",
+            message: error.message
         });
     }
 }

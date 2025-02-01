@@ -36,7 +36,7 @@ const forgetPassword = async (request, response) => {
         const dataToSend = {
             name : isPlayerExist.name,
             userName : isPlayerExist.userName,
-            resetUrl : `http://localhost:8000/player/change-password`,
+            resetUrl : `http://localhost:8000/player/change-password-form?token=${token}`,
         };
 
         
