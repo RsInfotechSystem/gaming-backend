@@ -72,6 +72,11 @@ const Contest = (Sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: [],  // Start with an empty array
         },
+        winningFiles: {
+            type: DataTypes.JSONB,  // Store as an array of UUIDs
+            allowNull: false,
+            defaultValue: [],  // Start with an empty array
+        },
         winner: {
             type: DataTypes.UUID,
             references: {
