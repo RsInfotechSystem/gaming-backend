@@ -41,4 +41,7 @@ exports.joinContestValidation = Joi.object().keys({
     gameUserName: Joi.string().required(),
 })
 
-
+exports.declareWinnerValidation = Joi.object().keys({
+    contestId: Joi.string().length(36).required(),
+    playerId: Joi.string().length(36).required(),
+})
