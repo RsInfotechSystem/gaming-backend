@@ -15,8 +15,6 @@ const roleServices = {
         try {
             return await Role.create(dataToInsert);
         } catch (error) {
-            // console.log("error while creation : ", error)
-
             throw error;
         }
     },
@@ -112,7 +110,8 @@ const roleServices = {
             const result = await Role.destroy({
                 where: {
                     id: roleIds
-                }
+                },
+                force: true
             });
 
             return result; // Number of deleted rows

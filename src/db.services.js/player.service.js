@@ -1,6 +1,6 @@
 const { Player } = require("../db/db");
-const limit = Number(process.env.LIMIT) ?? 20  //number of documents have to show per page
-const { Op } = require('sequelize');
+const limit = Number(process.env.LIMIT) ?? 20; //number of documents have to show per page
+const { Op } = require("sequelize");
 const countPages = require("../utils/helper/count-pages");
 
 const playerServices = {
@@ -8,8 +8,6 @@ const playerServices = {
         try {
             return await Player.create(dataToInsert);
         } catch (error) {
-            // console.log("error while creation : ", error)
-
             throw error;
         }
     },
@@ -46,20 +44,20 @@ const playerServices = {
                 filter[Op.or] = [
                     {
                         name: {
-                            [Op.iLike]: `%${searchString}%` // Case-insensitive LIKE operator
-                        }
+                            [Op.iLike]: `%${searchString}%`, // Case-insensitive LIKE operator
+                        },
                     },
                     {
                         userName: {
-                            [Op.iLike]: `%${searchString}%` // PostgreSQL specific operator for array containment
-                        }
-                    }
+                            [Op.iLike]: `%${searchString}%`, // PostgreSQL specific operator for array containment
+                        },
+                    },
                 ];
             }
 
             if (page < 1) {
-                page = 1
-            };
+                page = 1;
+            }
 
             // Count total records
             const totalRecords = await Player.count({ where: filter });

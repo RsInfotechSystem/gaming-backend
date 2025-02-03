@@ -20,7 +20,6 @@ const deleteCoin = async (request, response) => {
         const arrayLength = coinIds?.length;
         for (let i = 0; i < arrayLength; i++) {
             const coinId = coinIds[i];
-            console.log(" coinId : ", coinId)
             //check coin already exist 
             const isCoinExist = await coinServices.getCoinById(coinId)
             if (!isCoinExist) {

@@ -59,7 +59,7 @@ const updatePlayer = async (request, response) => {
         } else {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Player not updated",
+                message: "Player not updated please try again",
             });
         }
     } catch (error) {

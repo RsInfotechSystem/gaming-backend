@@ -1,6 +1,7 @@
 const userServices = require("../../db.services.js/user.service");
 const { loginValidationSchema } = require("../../utils/validation/user.validation");
 const generateUserJWT = require("../../utils/middleware/generate-token")
+const bcrypt = require("bcrypt");
 
 const login = async (request, response) => {
     try {
@@ -35,8 +36,16 @@ const login = async (request, response) => {
             })
         }
 
+        const matchPassword = await bcrypt.compare(password, isUserExist.password);
+        
+        if (!matchPassword) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "Incorrect password, please check your password and try again!"
+            })
+        }
+
         //Check password same or not
-        if (isUserExist.password === password) {
             const token = generateUserJWT(isUserExist.userId, isUserExist.name, isUserExist?.email, isUserExist?.mobile, isUserExist?.role?.name)
             if (token) {
                 return response.status(200).json({
@@ -45,11 +54,10 @@ const login = async (request, response) => {
                     token,
                     userDetails: isUserExist
                 })
-            }
-        } else {
+            } else {
             response.status(200).json({
                 status: "FAILED",
-                message: "Incorrect password, please check your password and try again!",
+                message: "Failed to generate token, please again!",
             });
             return;
         }

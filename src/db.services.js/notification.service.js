@@ -11,7 +11,12 @@ const notificationServices = {
     },
     deleteAllNotification: async (id) => {
         try {
-
+            const result = await Notification.destroy({
+                where: {
+                    userId: id
+                },force: true
+            });
+            return result;
         } catch (error) {
             throw error;
         }

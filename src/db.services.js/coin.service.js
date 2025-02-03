@@ -8,8 +8,6 @@ const coinServices = {
         try {
             return await Coin.create(dataToInsert);
         } catch (error) {
-            // console.log("error while creation : ", error)
-
             throw error;
         }
     },

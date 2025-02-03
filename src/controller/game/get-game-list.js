@@ -23,7 +23,6 @@ const getGameList = async (request, response) => {
             return;
         }
     } catch (error) {
-        console.log("FAILED error : ", error)
         return response.status(500).json({
             status: "FAILED",
             message: error.message

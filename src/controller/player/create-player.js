@@ -1,5 +1,6 @@
 const playerServices = require("../../db.services.js/player.service");
 const { createPlayerValidation } = require("../../utils/validation/player.validation");
+const bcrypt = require("bcrypt");
 
 const createPlayer = async (request, response) => {
   try {
@@ -23,12 +24,6 @@ const createPlayer = async (request, response) => {
       });
     }
 
-    if (password !== confirmPassword) {
-      return response.status(200).json({
-        status: "FAILED",
-        message: "Password and Confirm Password does not match",
-      });
-    }
 
     //check validation
     const validationResult = await createPlayerValidation.validate({ name, email, mobile: mobile?.toString(), dob, password, userName }, { abortEarly: true });
@@ -38,6 +33,13 @@ const createPlayer = async (request, response) => {
         message: validationResult?.error?.details[0]?.message,
       });
       return;
+    }
+
+    if (password !== confirmPassword) {
+      return response.status(200).json({
+        status: "FAILED",
+        message: "Password and Confirm Password does not match",
+      });
     }
 
     //check player already exist with mobile no and email
@@ -53,13 +55,16 @@ const createPlayer = async (request, response) => {
       return;
     }
 
+    //hash password
+    const hashPassword = await bcrypt.hash(password, 12);
+
     const dataToInsert = {
       name,
       email,
       mobile,
       dob,
       userName,
-      password,
+      password: hashPassword,
     };
 
     const player = await playerServices.createPlayer(dataToInsert);
@@ -77,8 +82,6 @@ const createPlayer = async (request, response) => {
       return;
     }
   } catch (error) {
-    console.log("Error while creating player : ", error);
-
     return response.status(500).json({
       status: "FAILED",
       message: error.message,

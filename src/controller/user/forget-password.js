@@ -1,44 +1,40 @@
-const playerServices = require("../../db.services.js/player.service");
-const sendEmail = require("../../utils/helper/sendEmail");
+const userServices = require("../../db.services.js/user.service");
 const jwt = require('jsonwebtoken');
+const sendEmail = require("../../utils/helper/sendEmail");
 
 const forgetPassword = async (request, response) => {
     try {
-        const { userName, email } = request.body;
+        const { userId, email } = request.body;
 
-        if (!userName || !email) {
+        if (!userId || !email) {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Please provide username and email",
+                message: "Please provide userId and email",
             });
         }
 
-        // check if player exist with email
-        const isPlayerExist = await playerServices.getPlayerByEmail(email);
-        if (!isPlayerExist) {
+        // check if user exist with email
+        const isUserExist = await userServices.getUserByEmail(email);
+        if (!isUserExist) {
             return response.status(200).json({
                 status: "FAILED",
-                message: "Player not found",
-            });
-        }
-
-        // check if username and email are of same player
-        if (isPlayerExist.userName !== userName) {
-            return response.status(200).json({
-                status: "FAILED",
-                message: "Username and email does not match",
+                message: "User not found",
             });
         }
 
         const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
-
+        if (!token) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "Unable to generate token, please try again",
+            });
+        }
 
         const dataToSend = {
-            name: isPlayerExist.name,
-            userName: isPlayerExist.userName,
-            resetUrl: `http://localhost:8000/player/change-password-form?token=${token}`,
+            name: isUserExist.name,
+            userName: isUserExist.userId,
+            resetUrl: `http://localhost:8000/user/change-password-form?token=${token}`,
         };
-
 
         // send email to player for changing password
 
@@ -46,8 +42,9 @@ const forgetPassword = async (request, response) => {
         //     dataToSend.resetUrl = "https://gaming-platform/reset-password";
         // }
 
-        // send email to player
-        await sendEmail(email, dataToSend);
+        // send email to user for changing password
+        await sendEmail(isUserExist.email, dataToSend);
+
         return response.status(200).json({
             status: "SUCCESS",
             message: "Email sent successfully",

@@ -1,60 +1,66 @@
 const playerServices = require("../../db.services.js/player.service");
+const bcrypt = require("bcrypt");
 
 const changePassword = async (request, response) => {
     try{
-        const {token} = request.query; 
-        const {newPassword, confirmNewPassword} = request.body;
+        //extract data from request body
+        const { playerId,oldPassword, newPassword} = request.body;
 
-        if(!token){
-            return response.status(200).json({
-                status : "FAILED",
-                message : "Token not found",
+        if (!playerId || !oldPassword || !newPassword) {
+                return response.status(200).json({
+                status: "FAILED",
+                message: "Player Id and oldpassword and newpassword is required",
             });
         }
 
-        if( !newPassword || !confirmNewPassword){
+        //check player already exist Id or not
+        const isPlayerExist = await playerServices.getPlayerById(playerId);
+        if (!isPlayerExist) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Please provide new password and confirm New Password",
-            });
-        }
-        const email = jwt.verify(token, process.env.JWT_SECRET_KEY).email;
-
-        // check if player exist with email 
-        const player = await playerServices.getPlayerByEmail(email);
-        if(!player){
-            return response.status(200).json({
-                status : "FAILED",
-                message : "Player not found",
+                status: "FAILED",
+                message: "Player does not exist",
             });
         }
 
-        // check if new password and confirm new password are same
-        if(newPassword !== confirmNewPassword){
+         //Check if player is active or not
+        if (isPlayerExist?.isActive === false) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "New password and confirm new password does not match",
+                status: "FAILED",
+                message: "You can not update disable player",
             });
         }
 
-        const updatePassword = await playerServices.updatePlayerPassword(email, newPassword);
-        if(!updatePassword){
+        //Check if old password matches with the password in the database
+        const matchPassword = await bcrypt.compare(oldPassword, isPlayerExist.password);
+        if (!matchPassword) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "unable to updated password",
+                status: "FAILED",
+                message: "Incorrect old password",
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        const dataToUpdate = {
+            password : hashedPassword,
+        };
+
+        const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);
+        if(updatedPlayer && updatedPlayer[0] > 0){
+            return response.status(200).json({
+                status: "SUCCESS",
+                message: "Password updated successfully",
             });
         }else{
             return response.status(200).json({
-                status : "SUCCESS",
-                message : "Password updated successfully",
+                status: "FAILED",
+                message: "Failed to update password",
             });
         }
-
     }catch(error){
-        console.log("Error while changing password : ",error);
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message,
+            status: "FAILED",
+            message: error.message,
         });
     }
 }

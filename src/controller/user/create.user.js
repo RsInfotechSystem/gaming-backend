@@ -2,6 +2,7 @@
 const roleServices = require("../../db.services.js/role.service");
 const userServices = require("../../db.services.js/user.service");
 const { createUserValidationSchema } = require("../../utils/validation/user.validation");
+const bcrypt = require("bcrypt");
 
 
 const createUser = async (request, response) => {
@@ -66,11 +67,14 @@ const createUser = async (request, response) => {
             userId = "GAM1000"
         };
 
+        //hash password
+        const hashPassword = await bcrypt.hash(password, 12);
+
         const dataToInsert = {
             name: name?.toLowerCase(),
             email,
             mobile: mobile?.toString(),
-            password,
+            password : hashPassword,
             roleId,
             roleName: isRoleExist?.name,
             userId,

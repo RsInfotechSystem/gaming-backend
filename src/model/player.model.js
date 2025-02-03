@@ -21,6 +21,11 @@ const Player = (sequelize, DataTypes) => {
       validate: {
         is: /^[0-9]{10}$/g,
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
     },
     dob: {
       type: DataTypes.DATE,
