@@ -3,61 +3,60 @@ const sendEmail = require("../../utils/helper/sendEmail");
 const jwt = require('jsonwebtoken');
 
 const forgetPassword = async (request, response) => {
-    try{
-        const {userName, email} = request.body;
+    try {
+        const { userName, email } = request.body;
 
-        if(!userName || !email){
+        if (!userName || !email) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Please provide username and email",
+                status: "FAILED",
+                message: "Please provide username and email",
             });
         }
 
         // check if player exist with email
         const isPlayerExist = await playerServices.getPlayerByEmail(email);
-        if(!isPlayerExist){
+        if (!isPlayerExist) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Player not found",
+                status: "FAILED",
+                message: "Player not found",
             });
         }
 
         // check if username and email are of same player
-        if(isPlayerExist.userName !== userName){
+        if (isPlayerExist.userName !== userName) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Username and email does not match",
+                status: "FAILED",
+                message: "Username and email does not match",
             });
         }
 
-        const token = jwt.sign({email}, process.env.JWT_SECRET_KEY, {expiresIn : "1h"});
+        const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
 
         const dataToSend = {
-            name : isPlayerExist.name,
-            userName : isPlayerExist.userName,
-            resetUrl : `http://localhost:8000/player/change-password-form?token=${token}`,
+            name: isPlayerExist.name,
+            userName: isPlayerExist.userName,
+            resetUrl: `http://localhost:8000/player/change-password-form?token=${token}`,
         };
 
-        
+
         // send email to player for changing password
 
-          // if(process.env.NODE_ENV === "production"){
+        // if(process.env.NODE_ENV === "production"){
         //     dataToSend.resetUrl = "https://gaming-platform/reset-password";
         // }
 
-            // send email to player
-            await sendEmail(email, dataToSend);
-            return response.status(200).json({
-                status : "SUCCESS",
-                message : "Email sent successfully",
-            });
+        // send email to player
+        await sendEmail(email, dataToSend);
+        return response.status(200).json({
+            status: "SUCCESS",
+            message: "Email sent successfully",
+        });
 
-    }catch(error){
-        console.log("Error while getting player list : ",error);
+    } catch (error) {
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message,
+            status: "FAILED",
+            message: error.message,
         });
     }
 }

@@ -6,7 +6,6 @@ const createCoin = async (request, response) => {
     try {
         //extract data from request body
         const { coinsCount, rupeesAmt } = request.body;
-        console.log("coinsCount, rupeesAmt : ", coinsCount, rupeesAmt)
 
         //check validation
         const validationResult = await createCoinValidation.validate({ coinsCount, rupeesAmt }, { abortEarly: true });
@@ -34,7 +33,6 @@ const createCoin = async (request, response) => {
 
         //Add role in db and send response to client
         const result = await coinServices.createCoin(dataToInsert);
-        console.log("result : ", result);
 
         if (result) {
             return response.status(200).json({
@@ -48,7 +46,6 @@ const createCoin = async (request, response) => {
             });
         }
     } catch (error) {
-        console.log("FAILEDFAILEDFAILEDFAILEDFAILEDFAILEDFAILED : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,

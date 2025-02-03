@@ -42,8 +42,6 @@ const updateGame = async (request, response) => {
             });
         };
 
-        console.log("isGameExist : ", isGameExist);
-
         // if (!isGameExist ?) {
         //     return response.status(200).json({
         //         status: "FAILED",
@@ -90,7 +88,6 @@ const updateGame = async (request, response) => {
             });
         }
     } catch (error) {
-        console.log("FAILED error : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,

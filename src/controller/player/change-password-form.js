@@ -1,12 +1,12 @@
 // Used to render the change password form
 const changePasswordForm = async (request, response) => {
-    try{
+    try {
         const token = request.query.token;
 
-        if(!token){
+        if (!token) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Token is missing"
+                status: "FAILED",
+                message: "Token is missing"
             });
         }
 
@@ -29,11 +29,10 @@ const changePasswordForm = async (request, response) => {
             </body>
             </html>
         `);
-    }catch(error){
-        console.log("Error while changing password : ",error);
+    } catch (error) {
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message
+            status: "FAILED",
+            message: error.message
         });
     }
 }

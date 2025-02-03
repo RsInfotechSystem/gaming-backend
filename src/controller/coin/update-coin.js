@@ -34,7 +34,6 @@ const updateCoin = async (request, response) => {
 
         //Add role in db and send response to client
         const result = await coinServices.updateCoin(coinId, { coinsCount, rupeesAmt });
-        console.log("result : ", result);
 
         if (result) {
             return response.status(200).json({
@@ -48,7 +47,6 @@ const updateCoin = async (request, response) => {
             });
         }
     } catch (error) {
-        console.log("FAILEDFAILEDFAILEDFAILEDFAILEDFAILEDFAILED : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,

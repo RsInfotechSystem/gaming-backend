@@ -4,12 +4,10 @@ const { Op } = require("sequelize");
 const countPages = require("../utils/helper/count-pages");
 
 const playerServices = {
-  createPlayer: async (dataToInsert) => {
-    try {
-      return await Player.create(dataToInsert);
-    } catch (error) {
-      // console.log("error while creation : ", error)
-
+    createPlayer: async (dataToInsert) => {
+        try {
+            return await Player.create(dataToInsert);
+        } catch (error) {
             throw error;
         }
     },
@@ -41,28 +39,28 @@ const playerServices = {
                 isDeleted: false,
             };
 
-      // Add $or condition if searchString is provided
-      if (searchString) {
-        filter[Op.or] = [
-          {
-            name: {
-              [Op.iLike]: `%${searchString}%`, // Case-insensitive LIKE operator
-            },
-          },
-          {
-            userName: {
-              [Op.iLike]: `%${searchString}%`, // PostgreSQL specific operator for array containment
-            },
-          },
-        ];
-      }
+            // Add $or condition if searchString is provided
+            if (searchString) {
+                filter[Op.or] = [
+                    {
+                        name: {
+                            [Op.iLike]: `%${searchString}%`, // Case-insensitive LIKE operator
+                        },
+                    },
+                    {
+                        userName: {
+                            [Op.iLike]: `%${searchString}%`, // PostgreSQL specific operator for array containment
+                        },
+                    },
+                ];
+            }
 
-      if (page < 1) {
-        page = 1;
-      }
+            if (page < 1) {
+                page = 1;
+            }
 
-      // Count total records
-      const totalRecords = await Player.count({ where: filter });
+            // Count total records
+            const totalRecords = await Player.count({ where: filter });
 
             // Calculate total pages
             const totalPages = await countPages(totalRecords);
@@ -118,13 +116,13 @@ const playerServices = {
             // Calculate total pages
             const totalPages = await countPages(totalRecords);
 
-      // Fetch records
-      const players = await Player.findAll({
-        where: filter,
-        limit: limit,
-        offset: (page - 1) * limit,
-        order: [["createdAt", "DESC"]],
-      });
+            // Fetch records
+            const players = await Player.findAll({
+                where: filter,
+                limit: limit,
+                offset: (page - 1) * limit,
+                order: [["createdAt", "DESC"]],
+            });
 
             return {
                 players,

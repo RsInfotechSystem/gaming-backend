@@ -19,7 +19,6 @@ const getGameById = async (request, response) => {
 
         //check role exist or not
         const game = await gameServices.getGameById(gameId);
-        console.log("game : ", game)
 
         if (game?.id) {
             response.status(200).json({

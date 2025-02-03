@@ -1,5 +1,5 @@
 const playerServices = require("../../db.services.js/player.service");
-const {loginPlayerValidation} = require("../../utils/validation/player.validation");
+const { loginPlayerValidation } = require("../../utils/validation/player.validation");
 const generateUserJWT = require("../../utils/middleware/generate-token");
 const bcrypt = require("bcrypt");
 
@@ -12,7 +12,7 @@ const loginPlayer = async (request, response) => {
       return response.status(200).json({
         status: "FAILED",
         message: "Email and password are required",
-        }); 
+      });
     }
 
     //check validation
@@ -30,8 +30,7 @@ const loginPlayer = async (request, response) => {
 
     //check player already exist or not
     const isPlayerExist = await playerServices.getPlayerByEmail(email);
-    console.log("isPlayerExist : ", isPlayerExist);
-    
+
     if (!isPlayerExist) {
       return response.status(200).json({
         status: "FAILED",
@@ -55,22 +54,21 @@ const loginPlayer = async (request, response) => {
       });
     }
 
-        const token = generateUserJWT(isPlayerExist.id, isPlayerExist.name, isPlayerExist?.email, isPlayerExist?.mobile, isPlayerExist?.dob, isPlayerExist?.userName);
-        if (token) {
-          return response.status(200).json({
-            status: "SUCCESS",
-            message: "Player login successfully",
-            token,
-            userDetails: isPlayerExist,
-          });
-        }else{
-        return response.status(200).json({
-            status: "FAILED",
-            message: "Failed to generate token, please again!",
-        });
+    const token = generateUserJWT(isPlayerExist.id, isPlayerExist.name, isPlayerExist?.email, isPlayerExist?.mobile, isPlayerExist?.dob, isPlayerExist?.userName);
+    if (token) {
+      return response.status(200).json({
+        status: "SUCCESS",
+        message: "Player login successfully",
+        token,
+        userDetails: isPlayerExist,
+      });
+    } else {
+      return response.status(200).json({
+        status: "FAILED",
+        message: "Failed to generate token, please again!",
+      });
     }
   } catch (error) {
-    console.log("Error while creating player : ", error);
     return response.status(500).json({
       status: "FAILED",
       message: error.message,

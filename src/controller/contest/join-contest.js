@@ -7,7 +7,6 @@ const { joinContestValidation } = require("../../utils/validation/contest.valida
 const joinContest = async (request, response) => {
     try {
         const { id } = request
-        console.log(" id : ", id)
 
         //extract data from request body
         const { contestId, gameUserName } = request.body;
@@ -87,7 +86,6 @@ const joinContest = async (request, response) => {
         }
 
     } catch (error) {
-        console.log("error : ", error)
         response.status(500).json({
             status: "FAILED",
             message: error.message,
