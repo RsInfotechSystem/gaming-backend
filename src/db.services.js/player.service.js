@@ -32,6 +32,13 @@ const playerServices = {
             throw error;
         }
     },
+    getPlayerByUsername: async (userName) => {
+        try {
+            return await Player.findOne({ where: { userName: userName?.toLowerCase() } });
+        } catch (error) {
+            throw error;
+        }
+    },
     getPlayerList: async (page = 1, searchString) => {
         try {
             // Build filter object for Sequelize

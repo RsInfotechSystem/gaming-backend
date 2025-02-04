@@ -4,7 +4,7 @@ const { updatePlayerValidation } = require("../../utils/validation/player.valida
 const updatePlayer = async (request, response) => {
     try {
         //extract data from request body
-        const { playerId, name, email, mobile, dob, userName, availableCoins } = request.body;
+        const { playerId, name, email, mobile, dob, userName } = request.body;
 
         if (!playerId) {
             return response.status(200).json({
@@ -40,6 +40,15 @@ const updatePlayer = async (request, response) => {
             });
         }
 
+        //check player already exist with userName
+        const isUsernameExist = await playerServices.getPlayerByUsername(userName);
+        if (isUsernameExist) {
+            response.status(200).json({
+                status: "FAILED",
+                message: "Player already exist with this username",
+            });
+            return;
+        }
 
         const dataToUpdate = {
             name,
@@ -47,7 +56,6 @@ const updatePlayer = async (request, response) => {
             mobile,
             dob,
             userName,
-            availableCoins
         };
 
         const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);

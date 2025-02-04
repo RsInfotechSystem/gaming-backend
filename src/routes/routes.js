@@ -11,7 +11,6 @@ const routes = require("express").Router();
 
 //!------------Main Routes-------------------
 routes.use("/role", roleRoutes);
-routes.use("/location", locationRoutes);
 routes.use("/user", userRoutes);
 routes.use("/game", gameRoutes);
 routes.use("/player", playerRoutes);

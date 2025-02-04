@@ -21,10 +21,10 @@ const updateGame = async (request, response) => {
         const gameDetails = JSON.parse(request.body.gameDetails);
 
         //extract data from request body
-        const { gameId, name, description, title, contestIds, playedCount, oldGameFiles } = gameDetails;
+        const { gameId, name, description, title, oldGameFiles } = gameDetails;
 
         //check validation
-        const validationResult = await updateGameValidation.validate({ gameId, name, description, title, contestIds, playedCount, oldGameFiles }, { abortEarly: true });
+        const validationResult = await updateGameValidation.validate({ gameId, name, description, title, oldGameFiles }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -69,7 +69,7 @@ const updateGame = async (request, response) => {
         }) ?? [];
 
         const dataToInsert = {
-            name, description, title, updatedBy: id, contestIds, playedCount,
+            name, description, title, updatedBy: id,
             gamefiles: [...attachment, ...oldGameFiles] ?? [],
         }
 
