@@ -22,10 +22,10 @@ const createGame = async (request, response) => {
         const gameDetails = JSON.parse(request.body.gameDetails);
 
         //extract data from request body
-        const { name, description, title, contestIds, playedCount } = gameDetails;
+        const { name, description, title } = gameDetails;
 
         //check validation
-        const validationResult = await createGameValidation.validate({ name, description, title, contestIds, playedCount }, { abortEarly: true });
+        const validationResult = await createGameValidation.validate({ name, description, title }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -64,7 +64,7 @@ const createGame = async (request, response) => {
         }) ?? [];
 
         const dataToInsert = {
-            name, description, title, addedBy: id, contestIds, playedCount,
+            name, description, title, addedBy: id,
             gamefiles: attachment ?? [],
         }
 

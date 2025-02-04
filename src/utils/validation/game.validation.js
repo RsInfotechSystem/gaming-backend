@@ -5,8 +5,6 @@ exports.createGameValidation = Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string(),
     title: Joi.string().required(),
-    contestIds: Joi.array().items(Joi.string().length(36).optional()).required(),
-    playedCount: Joi.number().required(),
 });
 
 exports.updateGameValidation = Joi.object().keys({
@@ -14,9 +12,7 @@ exports.updateGameValidation = Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string(),
     title: Joi.string().required(),
-    contestIds: Joi.array().items(Joi.string().length(36).optional()).required(),
     oldGameFiles: Joi.array().items().allow(null, "").optional(),
-    playedCount: Joi.number().required(),
 });
 
 exports.gameIdsValidationSchema = Joi.object().keys({

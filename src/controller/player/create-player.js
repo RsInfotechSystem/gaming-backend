@@ -7,26 +7,8 @@ const createPlayer = async (request, response) => {
     //extract data from request body
     const { name, email, mobile, dob, userName, password, confirmPassword } = request.body;
 
-    if (!name || !email || !mobile || !dob || !userName || !password || !confirmPassword) {
-      const missingFields = [];
-
-      if (!name) missingFields.push("name");
-      if (!email) missingFields.push("email");
-      if (!mobile) missingFields.push("mobile");
-      if (!dob) missingFields.push("dob");
-      if (!userName) missingFields.push("userName");
-      if (!password) missingFields.push("password");
-      if (!confirmPassword) missingFields.push("confirmPassword");
-
-      return response.status(200).json({
-        status: "FAILED",
-        message: "All fields are required missing fields are " + missingFields,
-      });
-    }
-
-
     //check validation
-    const validationResult = await createPlayerValidation.validate({ name, email, mobile: mobile?.toString(), dob, password, userName }, { abortEarly: true });
+    const validationResult = await createPlayerValidation.validate({ name, email, mobile: mobile?.toString(), dob, password, confirmPassword, userName }, { abortEarly: true });
     if (validationResult.error) {
       response.status(200).json({
         status: "FAILED",
@@ -51,6 +33,16 @@ const createPlayer = async (request, response) => {
       response.status(200).json({
         status: "FAILED",
         message: "Player already exist with this email and mobile",
+      });
+      return;
+    }
+
+    //check player already exist with userName
+    const isUsernameExist = await playerServices.getPlayerByUsername(userName);
+    if (isUsernameExist) {
+      response.status(200).json({
+        status: "FAILED",
+        message: "Player already exist with this username",
       });
       return;
     }
@@ -82,6 +74,8 @@ const createPlayer = async (request, response) => {
       return;
     }
   } catch (error) {
+    console.log(" err", error);
+
     return response.status(500).json({
       status: "FAILED",
       message: error.message,

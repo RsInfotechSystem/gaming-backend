@@ -36,8 +36,9 @@ const login = async (request, response) => {
             })
         }
 
+
         const matchPassword = await bcrypt.compare(password, isUserExist.password);
-        
+
         if (!matchPassword) {
             return response.status(200).json({
                 status: "FAILED",
@@ -46,15 +47,15 @@ const login = async (request, response) => {
         }
 
         //Check password same or not
-            const token = generateUserJWT(isUserExist.userId, isUserExist.name, isUserExist?.email, isUserExist?.mobile, isUserExist?.role?.name)
-            if (token) {
-                return response.status(200).json({
-                    status: "SUCCESS",
-                    message: "Login Successfully",
-                    token,
-                    userDetails: isUserExist
-                })
-            } else {
+        const token = generateUserJWT(isUserExist.userId, isUserExist.name, isUserExist?.email, isUserExist?.mobile, isUserExist?.role?.name)
+        if (token) {
+            return response.status(200).json({
+                status: "SUCCESS",
+                message: "Login Successfully",
+                token,
+                userDetails: isUserExist
+            })
+        } else {
             response.status(200).json({
                 status: "FAILED",
                 message: "Failed to generate token, please again!",
