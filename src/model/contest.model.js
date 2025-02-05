@@ -31,7 +31,7 @@ const Contest = (Sequelize, DataTypes) => {
             allowNull: false,
         },
         contestTime: {
-            type: DataTypes.STRING,
+            type: DataTypes.TIME,
             allowNull: false,
         },
         reqCoinsToJoin: {
