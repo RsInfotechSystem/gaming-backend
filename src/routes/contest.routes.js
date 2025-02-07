@@ -1,4 +1,5 @@
 const authenticatePlayerJWT = require("../utils/middleware/auth-player");
+const authenticateUserJWT = require("../utils/middleware/auth");
 const tabAccessMiddleware = require("../utils/middleware/tab-access-middleware");
 const createContest = require("../controller/contest/create-contest");
 const updateContest = require("../controller/contest/update-contest");
@@ -17,8 +18,8 @@ const getWinnerPlayerList = require("../controller/contest/get-winning-player-li
 const contestRoutes = require("express").Router();
 
 //!--------------Contest Routes---------------------
-contestRoutes.post("/create-contest", authenticatePlayerJWT, createContest);
-contestRoutes.post("/update-contest", authenticatePlayerJWT, updateContest);
+contestRoutes.post("/create-contest", authenticateUserJWT, createContest);
+contestRoutes.post("/update-contest", authenticateUserJWT, updateContest);
 contestRoutes.post("/get-contest-list", authenticatePlayerJWT, getContestList);
 contestRoutes.post("/get-contest-by-id", authenticatePlayerJWT, getContestById);
 contestRoutes.get("/get-active-contest", authenticatePlayerJWT, getActiveContest)

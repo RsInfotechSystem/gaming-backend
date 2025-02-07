@@ -8,6 +8,9 @@ const { createContestValidation } = require("../../utils/validation/contest.vali
 const createContest = async (request, response) => {
     try {
         const { id } = request
+
+        console.log("Check if id exist :",id);
+        
         //Upload image file using multer
         const file = await runMiddleware(request, response, uploadImg.array("contestFiles", 10));
         if (file) {
@@ -93,6 +96,8 @@ const createContest = async (request, response) => {
         }
 
     } catch (error) {
+        console.log("error:",error);
+        
         response.status(500).json({
             status: "FAILED",
             message: error.message,

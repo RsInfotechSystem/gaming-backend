@@ -61,11 +61,11 @@ const Contest = (Sequelize, DataTypes) => {
         },
         roomId: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         passwordToJoin: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         contestFiles: {
             type: DataTypes.JSONB,  // Store as an array of UUIDs
