@@ -4,7 +4,7 @@ const createCoin = require("../controller/coin/create-coin");
 const updateCoin = require("../controller/coin/update-coin");
 const getCoinList = require("../controller/coin/get-coin-list");
 const deleteCoin = require("../controller/coin/delete-coin");
-const getCoinById = require("../controller/coin/get-coin-By-Id");
+const getCoinById = require("../controller/coin/get-coin-by-id");
 // const gamesList = require("../controller/coin/get-active-coin");
 
 const coinRoutes = require("express").Router();
