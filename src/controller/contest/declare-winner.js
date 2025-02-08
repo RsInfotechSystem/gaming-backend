@@ -52,7 +52,7 @@ const declareWinner = async (request, response) => {
         }
 
 
-        console.log("isContestExist?.dataValues?.joinedPlayers.includes(playerId) : ", isContestExist?.dataValues?.joinedPlayers.includes(playerId));
+        // console.log("isContestExist?.dataValues?.joinedPlayers.includes(playerId) : ", isContestExist?.dataValues?.joinedPlayers.includes(playerId));
 
         if (!isContestExist?.dataValues?.joinedPlayers.includes(playerId)) {
             return response.status(200).json({
@@ -108,6 +108,27 @@ const declareWinner = async (request, response) => {
                     message : "Failed to send notificatoin, Please try again"
                 })
             }
+
+            io.emit("winnerDeclared", {
+                contestId,
+                winnerId: playerId,
+                winnerName: isPlayerExist.userName,
+                winningFiles: attachment,
+            });
+
+            if (global.adminSocketId) {
+                io.to(global.adminSocketId).emit("newWinnerDeclared", {
+                    contestId,
+                    winnerId: playerId,
+                    winnerName: isPlayerExist.userName,
+                });
+            }
+
+            io.to(`user_${playerId}`).emit("youWon", {
+                contestId,
+                winnerName: isPlayerExist.userName,
+                prize: isContestExist.winningPrice,
+            });
 
             return response.status(200).json({
                 status: "SUCCESS",
