@@ -215,6 +215,149 @@ const contestServices = {
             throw error;
         }
     },
+    getGameWiseContestList : async (page = 1, searchString,gameId) => {
+        try{
+            const filter = {
+                isDeleted : false,
+                gameId : gameId
+            }
+
+            if(searchString){
+                filter[Op.or] = [
+                    { name: { [Op.iLike]: `%${searchString}%` } },
+                    { description: { [Op.iLike]: `%${searchString}%` } },
+                ];
+            }
+
+            const totalRecords = await Contest.count({
+                where: filter,
+                include: [
+                    { model: Game, as: "game", where: { id: gameId } , required: true },
+                ],
+
+            });
+
+            const contestList = await Contest.findAll({
+                where: filter,
+                include: [
+                    { model: Game, as: "game", where:{ id: gameId } , required: true },
+                ],
+                order: [["updatedAt", "DESC"]],
+                limit: limit,
+                offset: (page - 1) * limit,
+            })
+
+            const totalPages = await countPages(totalRecords);
+            return {
+                totalPages,
+                contestList,
+            };
+
+        }catch(error){
+            throw error ; 
+        }
+    },
+
+    getUpcomingContestList : async (page ) => {
+        try{
+            const currentDate = new Date();
+            const currentDateString = currentDate.toISOString().split("T")[0];
+            const currentTimeString = currentDate.toISOString().split("T")[1].split(".")[0]
+
+            const filter = {
+                isDeleted : false,
+                contestDate : {
+                    [Op.gte] : currentDateString,
+                },
+                contestTime : {
+                    [Op.gte]:currentTimeString,
+                },
+            }
+
+            const totalRecords = await Contest.count({
+                where: filter,
+            });
+
+            const contestList = await Contest.findAll({
+                where : filter,
+                order: [["contestDate", "ASC"], ["contestTime", "ASC"]],
+                limit: limit,
+                offset: (page - 1) * limit,
+            });
+
+            const totalPages = await countPages(totalRecords);
+
+            return {
+                totalPages,
+                contestList,
+            };
+
+        }catch(error){
+            throw error;
+        }
+    },
+
+    getWinnerPlayerList : async (page, searchString) => {
+        try{
+            const filter = {
+                isDeleted : false,
+                winner : {
+                    [Op.ne] : null,
+                }
+            };
+
+            if (searchString) {
+                filter[Op.or] = [
+                    { name: { [Op.iLike]: `%${searchString}%` } },
+                    { description: { [Op.iLike]: `%${searchString}%` } },
+                ];
+            }
+
+            const totalRecords = await Contest.count({
+                where: filter,
+            });
+
+            const WinningPlayerList = await Contest.findAll({
+                attributes : [
+                    'gameId',
+                    'gameType',
+                    'winner',
+                    [fn('COUNT', col('winner')), 'totalWins'],
+                ],
+                where : filter,
+                group : ["gameId","gameType","winner"],
+                include : [
+                    {
+                        model: Game,
+                        as: 'game',
+                        attributes: ['id', 'name'], // Include game name or other details as needed
+                    },
+                    {
+                        model: Player,
+                        as: 'winnerPlayer',
+                        attributes: ['id', 'name'], // Include player name or other details as needed
+                    },
+                ],
+
+                order: [
+                    ['gameId', 'ASC'],
+                    ['gameType', 'ASC'],
+                    ['winner', 'ASC'],
+                ],
+                limit: limit,
+                offset: (page - 1) * limit,
+            }); 
+
+            const totalPages = await countPages(totalRecords);
+
+            return {
+                totalPages,
+                WinningPlayerList,
+            };
+        }catch(error){
+            throw error;
+        }
+    },
 
 };
 

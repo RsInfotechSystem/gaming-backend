@@ -9,7 +9,7 @@ const { DB_URL, DB_SSL } = process.env;
 const sequelize = new Sequelize(DB_URL, {
     dialect: "postgres",
     dialectOptions: {
-        ssl: DB_SSL === "true", // Convert the string "true" to a boolean
+        ssl: DB_SSL === "true" ? {require : true , rejectUnauthorized: false} : false, // Convert the string "true" to a boolean
     },
     pool: {
         max: 5,
@@ -21,14 +21,15 @@ const sequelize = new Sequelize(DB_URL, {
 sequelize
     .authenticate()
     .then(() => {
-        console.log("connected...🟢");
+        console.log("connected to neon database...🟢");
     })
     .catch((err) => {
-        console.log("Error" + err);
+        console.log("Database connection error: ❌" + err);
         throw err;
     });
 
 
+// Import models
 const Role = require("../model/role.model")(sequelize, DataTypes);
 const Location = require("../model/location.model")(sequelize, DataTypes);
 const User = require("../model/user.model")(sequelize, DataTypes);

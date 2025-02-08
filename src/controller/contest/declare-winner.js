@@ -1,5 +1,6 @@
 const contestServices = require("../../db.services.js/contest.service");
 const playerServices = require("../../db.services.js/player.service");
+const notificationServices = require("../../db.services.js/notification.service");
 const runMiddleware = require("../../utils/helper/multer.middleware");
 const { uploadImg } = require("../../utils/multer/upload.img");
 const { declareWinnerValidation } = require("../../utils/validation/contest.validation");
@@ -79,6 +80,35 @@ const declareWinner = async (request, response) => {
         const result = await contestServices.updateContest(contestId, dataToUpdate);
 
         if (result) {
+            const notificationForAdmin = {
+                title: `Winner Declared for ${isContestExist.name} contest`,
+                description: `🎯 **${isPlayerExist.userName}** (ID: ${playerId}) has been declared the **winner** of **"${isContestExist.name}"**!\n
+                🔹 **Game Type**: ${isContestExist.gameType} (Game ID: ${isContestExist.gameId})
+                🔹 **Game Date & Timing** : Date : ${isContestExist.contestDate}    Time : ${isContestExist.contestTime}
+                🔹 **Winning Proof Attached**: ${attachment.length > 0 ? "✅ Yes" : "❌ No"}`,
+                createdBy: "Admin",
+                notificationFor: "admin",
+            }
+
+            const notificationForPlayer = {
+                title: `🏆 Congratulations! You won the ${isContestExist.name} contest!`,
+                description: `🎉 Player **${isPlayerExist.userName}** has been declared the winner of **"${isContestExist.name}"**!\n
+                🏅 Game: ${isContestExist.gameType} (Game ID: ${isContestExist.gameId})
+                🎯 Prize Pool: ${isContestExist.winningPrice} Coins
+                📁 Proof Attached: ${attachment.length > 0 ? "✅ Yes" : "❌ No"}`,
+                createdBy: "Admin",
+                notificationFor: playerId,
+            }
+                  
+            const createNotification = await notificationServices.insertNotification([notificationForAdmin,notificationForPlayer]);
+
+            if(!createNotification){
+                return response.status(200).json({
+                    status : "FAILED",
+                    message : "Failed to send notificatoin, Please try again"
+                })
+            }
+
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Winner declared successfully",

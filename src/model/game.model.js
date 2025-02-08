@@ -54,7 +54,7 @@ const Game = (Sequelize, DataTypes) => {
 
         playedCount: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         isActive: {
             type: DataTypes.BOOLEAN,
