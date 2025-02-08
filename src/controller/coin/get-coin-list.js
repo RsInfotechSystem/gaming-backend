@@ -1,15 +1,15 @@
 const coinServices = require("../../db.services.js/coin.service");
 
 const getCoinList = async (request, response) => {
-    try{
+    try {
         // const {page} = request.body;
 
-        const result = await coinServices.getCoinList()
-        if (result.totalPages > 0) {
+        const coinList = await coinServices.getCoinList()
+        if (coinList?.length > 0) {
             response.status(200).json({
                 status: "SUCCESS",
                 message: "Coin fetch successfully",
-                ...result
+                coinList
             });
             return;
         } else {
@@ -20,10 +20,10 @@ const getCoinList = async (request, response) => {
             return;
         }
 
-    }catch(error){
+    } catch (error) {
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message
+            status: "FAILED",
+            message: error.message
         });
     }
 }
