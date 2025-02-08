@@ -6,13 +6,33 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
 const dotenv = require("dotenv");
+const http = require("http");
+const socketIo = require("socket.io");
 dotenv.config();
+
+const server = http.createServer(app);
+const io = socketIo(server)
 
 // Middleware
 app.use(cors({ origin: "*" }));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//Socket IO connection event 
+io.on("connection", async(socket) => {
+    console.log("A user connected");
+
+    socket.on("disconnect", ()=> {
+        console.log("A user disconnected");
+        
+    });
+})
+
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
 
 //routes
 app.use('/getFiles', express.static(path.join(__dirname, '')));

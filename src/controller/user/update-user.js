@@ -7,10 +7,10 @@ const { updateUserValidation } = require("../../utils/validation/user.validation
 const updateUser = async (request, response) => {
     try {
         //extract data from request body
-        const { userId, name, email, mobile, password, roleId } = request.body;
+        const { userId, name, email, mobile, roleId } = request.body;
 
         //check validation
-        const validationResult = await updateUserValidation.validate({ userId, name, email, mobile, password, roleId}, { abortEarly: true });
+        const validationResult = await updateUserValidation.validate({ userId, name, email, mobile, roleId}, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -70,7 +70,6 @@ const updateUser = async (request, response) => {
             name: name?.toLowerCase(),
             email,
             mobile: mobile?.toString(),
-            password,
             roleId,
             roleName: isRoleExist?.name,
         };
