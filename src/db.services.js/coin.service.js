@@ -19,7 +19,10 @@ const coinServices = {
                 order: [["updatedAt", "DESC"]],
             })
 
-             return coinList;
+             return {
+                coinList,
+                totalRecords
+             };
 
         }catch(error){
             throw error;
