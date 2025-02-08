@@ -1,10 +1,12 @@
 const coinServices = require("../../db.services.js/coin.service");
 
-const getCoinList = async (request, response) => {
+const getCoinListForUser= async (request, response) => {
     try {
         // const {page} = request.body;
 
         const coinList = await coinServices.getCoinList()
+        console.log("coinList :",coinList);
+        
         if (coinList?.totalRecords > 0) {
             response.status(200).json({
                 status: "SUCCESS",
@@ -28,4 +30,4 @@ const getCoinList = async (request, response) => {
     }
 }
 
-module.exports = getCoinList;
+module.exports = getCoinListForUser;
