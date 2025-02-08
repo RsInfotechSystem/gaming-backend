@@ -19,13 +19,22 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+global.adminSocketId = null;
 //Socket IO connection event 
 io.on("connection", async(socket) => {
-    console.log("A user connected");
+    console.log("A user connected",socket.id);
+
+    socket.on("adminConnected", () => {
+        global.adminSocketId = socket.id;
+        console.log("Admin connected:", global.adminSocketId);
+      });
 
     socket.on("disconnect", ()=> {
-        console.log("A user disconnected");
-        
+        console.log("A user disconnected",socket.id);
+        if (socket.id === global.adminSocketId) {
+            global.adminSocketId = null;
+          }
     });
 })
 

@@ -70,11 +70,10 @@ const joinContest = async (request, response) => {
         message: "Room is full!",
       });
     }
-
+    
     const dataToUpdate = {
-      contestId,
-      gameUserName,
       joinedPlayers: allPlayers,
+      joinedCount : allPlayers.length
     };
 
     //Add contest in db and send response to client
@@ -125,6 +124,20 @@ const joinContest = async (request, response) => {
             message : "Failed to send notificatoin, Please try again"
         });
       }
+
+      io.emit("contestUpdated", {
+        contestId,
+        joinedPlayers: allPlayers,
+        joinedCount: allPlayers.length
+    });
+
+    if (global.adminSocketId) {
+      io.to(global.adminSocketId).emit("newPlayerJoined", {
+          contestId,
+          playerId: id,
+          playerName: isPlayerExist.userName
+      });
+  }
 
       return response.status(200).json({
         status: "SUCCESS",
