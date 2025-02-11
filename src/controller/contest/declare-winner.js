@@ -99,13 +99,13 @@ const declareWinner = async (request, response) => {
                 createdBy: "Admin",
                 notificationFor: playerId,
             }
-                  
-            const createNotification = await notificationServices.insertNotification([notificationForAdmin,notificationForPlayer]);
 
-            if(!createNotification){
+            const createNotification = await notificationServices.insertNotification([notificationForAdmin, notificationForPlayer]);
+
+            if (!createNotification) {
                 return response.status(200).json({
-                    status : "FAILED",
-                    message : "Failed to send notificatoin, Please try again"
+                    status: "FAILED",
+                    message: "Failed to send notificatoin, Please try again"
                 })
             }
 

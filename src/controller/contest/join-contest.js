@@ -70,10 +70,10 @@ const joinContest = async (request, response) => {
         message: "Room is full!",
       });
     }
-    
+
     const dataToUpdate = {
       joinedPlayers: allPlayers,
-      joinedCount : allPlayers.length
+      joinedCount: allPlayers.length
     };
 
     //Add contest in db and send response to client
@@ -115,13 +115,13 @@ const joinContest = async (request, response) => {
         notificationFor: "admin",
       };
 
-      console.log("notification :",notifications);
-      
+      console.log("notification :", notifications);
+
       const sendNotification = await notificationServices.insertNotification(notifications)
-      if(!sendNotification){
+      if (!sendNotification) {
         return response.status(200).json({
-            status : "FAILED",
-            message : "Failed to send notificatoin, Please try again"
+          status: "FAILED",
+          message: "Failed to send notificatoin, Please try again"
         });
       }
 
@@ -129,15 +129,15 @@ const joinContest = async (request, response) => {
         contestId,
         joinedPlayers: allPlayers,
         joinedCount: allPlayers.length
-    });
+      });
 
-    if (global.adminSocketId) {
-      io.to(global.adminSocketId).emit("newPlayerJoined", {
+      if (global.adminSocketId) {
+        io.to(global.adminSocketId).emit("newPlayerJoined", {
           contestId,
           playerId: id,
           playerName: isPlayerExist.userName
-      });
-  }
+        });
+      }
 
       return response.status(200).json({
         status: "SUCCESS",
