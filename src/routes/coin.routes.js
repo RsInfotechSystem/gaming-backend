@@ -13,10 +13,10 @@ const coinRoutes = require("express").Router();
 //!--------------coin Routes---------------------
 coinRoutes.post("/create-coin", authenticateUserJWT, tabAccessMiddleware("coins"), createCoin);
 coinRoutes.post("/update-coin", authenticateUserJWT, tabAccessMiddleware("coins"), updateCoin);
-coinRoutes.post("/get-coin-list", authenticateUserJWT, tabAccessMiddleware("coins"), getCoinList);
+coinRoutes.post("/get-coin-list", getCoinList);
 coinRoutes.post("/get-coin-by-id", authenticateUserJWT, tabAccessMiddleware("coins"), getCoinById);
 coinRoutes.post("/delete-coin", authenticateUserJWT, tabAccessMiddleware("coins"), deleteCoin);
-coinRoutes.post("/get-coin-list-for-user",getCoinListForUser);
+coinRoutes.post("/get-coin-list-for-user", getCoinListForUser);
 
 
 module.exports = coinRoutes;

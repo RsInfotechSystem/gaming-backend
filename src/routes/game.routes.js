@@ -12,8 +12,8 @@ const gameRoutes = require("express").Router();
 //!--------------game Routes---------------------
 gameRoutes.post("/create-game", authenticateUserJWT, tabAccessMiddleware("game list"), createGame);
 gameRoutes.post("/update-game", authenticateUserJWT, tabAccessMiddleware("game list"), updateGame);
-gameRoutes.post("/get-game-list", authenticateUserJWT, tabAccessMiddleware("game list"), getGameList);
-gameRoutes.post("/get-game-by-id", authenticateUserJWT, tabAccessMiddleware("game list"), getGameById);
+gameRoutes.post("/get-game-list", getGameList);
+gameRoutes.post("/get-game-by-id", getGameById);
 gameRoutes.post("/delete-game", authenticateUserJWT, tabAccessMiddleware("game list"), deleteSelectedGames);
 
 

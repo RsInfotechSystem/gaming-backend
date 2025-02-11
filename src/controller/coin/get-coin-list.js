@@ -9,7 +9,7 @@ const getCoinList = async (request, response) => {
             response.status(200).json({
                 status: "SUCCESS",
                 message: "Coin fetch successfully",
-                coinList
+                ...coinList
             });
             return;
         } else {
