@@ -9,8 +9,6 @@ const createContest = async (request, response) => {
     try {
         const { id } = request
 
-        console.log("Check if id exist :",id);
-        
         //Upload image file using multer
         const file = await runMiddleware(request, response, uploadImg.array("contestFiles", 10));
         if (file) {
@@ -45,14 +43,14 @@ const createContest = async (request, response) => {
         //     return;
         // }
 
-        const isGameExist = await gameServices.getGameById(gameId);
-        if (!isGameExist) {
-            response.status(200).json({
-                status: "FAILED",
-                message: "Contest already exist with this name",
-            });
-            return;
-        }
+        // const isGameExist = await gameServices.getGameById(gameId);
+        // if (!isGameExist) {
+        //     response.status(200).json({
+        //         status: "FAILED",
+        //         message: "Contest already exist with this name",
+        //     });
+        //     return;
+        // }
 
         // Allowed game types
         const allowedGameTypes = ["solo", "duo", "squad"];
@@ -96,8 +94,6 @@ const createContest = async (request, response) => {
         }
 
     } catch (error) {
-        console.log("error:",error);
-        
         response.status(500).json({
             status: "FAILED",
             message: error.message,

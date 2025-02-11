@@ -215,14 +215,14 @@ const contestServices = {
             throw error;
         }
     },
-    getGameWiseContestList : async (page = 1, searchString,gameId) => {
-        try{
+    getGameWiseContestList: async (page = 1, searchString, gameId) => {
+        try {
             const filter = {
-                isDeleted : false,
-                gameId : gameId
+                isDeleted: false,
+                gameId: gameId
             }
 
-            if(searchString){
+            if (searchString) {
                 filter[Op.or] = [
                     { name: { [Op.iLike]: `%${searchString}%` } },
                     { description: { [Op.iLike]: `%${searchString}%` } },
@@ -232,7 +232,7 @@ const contestServices = {
             const totalRecords = await Contest.count({
                 where: filter,
                 include: [
-                    { model: Game, as: "game", where: { id: gameId } , required: true },
+                    { model: Game, as: "game", where: { id: gameId }, required: true },
                 ],
 
             });
@@ -240,7 +240,7 @@ const contestServices = {
             const contestList = await Contest.findAll({
                 where: filter,
                 include: [
-                    { model: Game, as: "game", where:{ id: gameId } , required: true },
+                    { model: Game, as: "game", where: { id: gameId }, required: true },
                 ],
                 order: [["updatedAt", "DESC"]],
                 limit: limit,
@@ -253,24 +253,24 @@ const contestServices = {
                 contestList,
             };
 
-        }catch(error){
-            throw error ; 
+        } catch (error) {
+            throw error;
         }
     },
 
-    getUpcomingContestList : async (page ) => {
-        try{
+    getUpcomingContestList: async (page) => {
+        try {
             const currentDate = new Date();
             const currentDateString = currentDate.toISOString().split("T")[0];
             const currentTimeString = currentDate.toISOString().split("T")[1].split(".")[0]
 
             const filter = {
-                isDeleted : false,
-                contestDate : {
-                    [Op.gte] : currentDateString,
+                isDeleted: false,
+                contestDate: {
+                    [Op.gte]: currentDateString,
                 },
-                contestTime : {
-                    [Op.gte]:currentTimeString,
+                contestTime: {
+                    [Op.gte]: currentTimeString,
                 },
             }
 
@@ -279,7 +279,7 @@ const contestServices = {
             });
 
             const contestList = await Contest.findAll({
-                where : filter,
+                where: filter,
                 order: [["contestDate", "ASC"], ["contestTime", "ASC"]],
                 limit: limit,
                 offset: (page - 1) * limit,
@@ -292,17 +292,17 @@ const contestServices = {
                 contestList,
             };
 
-        }catch(error){
+        } catch (error) {
             throw error;
         }
     },
 
-    getWinnerPlayerList : async (page, searchString) => {
-        try{
+    getWinnerPlayerList: async (page, searchString) => {
+        try {
             const filter = {
-                isDeleted : false,
-                winner : {
-                    [Op.ne] : null,
+                isDeleted: false,
+                winner: {
+                    [Op.ne]: null,
                 }
             };
 
@@ -318,15 +318,15 @@ const contestServices = {
             });
 
             const WinningPlayerList = await Contest.findAll({
-                attributes : [
+                attributes: [
                     'gameId',
                     'gameType',
                     'winner',
                     [fn('COUNT', col('winner')), 'totalWins'],
                 ],
-                where : filter,
-                group : ["gameId","gameType","winner"],
-                include : [
+                where: filter,
+                group: ["gameId", "gameType", "winner"],
+                include: [
                     {
                         model: Game,
                         as: 'game',
@@ -346,7 +346,7 @@ const contestServices = {
                 ],
                 limit: limit,
                 offset: (page - 1) * limit,
-            }); 
+            });
 
             const totalPages = await countPages(totalRecords);
 
@@ -354,7 +354,7 @@ const contestServices = {
                 totalPages,
                 WinningPlayerList,
             };
-        }catch(error){
+        } catch (error) {
             throw error;
         }
     },

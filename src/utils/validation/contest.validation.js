@@ -11,8 +11,8 @@ exports.createContestValidation = Joi.object().keys({
     reqCoinsToJoin: Joi.number().required(),
     winningPrice: Joi.number().required(),
     playersLimit: Joi.number().required(),
-    roomId: Joi.string().optional(),
-    passwordToJoin: Joi.string().optional(),
+    roomId: Joi.string().allow(null, "").optional(),
+    passwordToJoin: Joi.string().allow(null, "").optional(),
 });
 
 
@@ -27,8 +27,8 @@ exports.updateContestValidation = Joi.object().keys({
     reqCoinsToJoin: Joi.number().required(),
     winningPrice: Joi.number().required(),
     playersLimit: Joi.number().required(),
-    roomId: Joi.string().optional(),
-    passwordToJoin: Joi.string().optional(),
+    roomId: Joi.string().allow(null, "").optional(),
+    passwordToJoin: Joi.string().allow(null, "").optional(),
     oldContestFiles: Joi.array().items().allow(null, "").optional(),
 });
 
