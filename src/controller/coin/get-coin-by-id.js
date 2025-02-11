@@ -4,7 +4,7 @@ const getCoinById = async (request, response) => {
   try {
     const { coinId } = request.body;
 
-    if (!id) {
+    if (!coinId) {
       return response.status(200).json({
         status: "FAILED",
         message: "Id is missing",

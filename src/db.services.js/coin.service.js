@@ -13,12 +13,17 @@ const coinServices = {
     },
     getCoinList: async () => {
         try {
+            const totalRecords = await Coin.count()
             const coinList = await Coin.findAll({
                 order: [["updatedAt", "DESC"]],
             })
 
-            return coinList;
-        } catch (error) {
+             return {
+                coinList,
+                totalRecords
+             };
+
+        }catch(error){
             throw error;
         }
     },

@@ -23,19 +23,20 @@ const forgetPassword = async (request, response) => {
         }
 
         // check if username and email are of same player
-        if (isPlayerExist.userName !== userName) {
+        if (isPlayerExist?.userName !== userName) {
             return response.status(200).json({
                 status: "FAILED",
                 message: "Username and email does not match",
             });
         }
 
-        const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
 
+        console.log("token : ", token)
 
         const dataToSend = {
-            name: isPlayerExist.name,
-            userName: isPlayerExist.userName,
+            name: isPlayerExist?.name,
+            userName: isPlayerExist?.userName,
             resetUrl: `http://localhost:8000/player/change-password-form?token=${token}`,
         };
 
@@ -45,6 +46,8 @@ const forgetPassword = async (request, response) => {
         // if(process.env.NODE_ENV === "production"){
         //     dataToSend.resetUrl = "https://gaming-platform/reset-password";
         // }
+
+        console.log("dataToSend : ", dataToSend);
 
         // send email to player
         await sendEmail(email, dataToSend);
