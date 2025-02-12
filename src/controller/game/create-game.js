@@ -25,7 +25,7 @@ const createGame = async (request, response) => {
         const { name, description, title } = gameDetails;
 
         //check validation
-        const validationResult = await createGameValidation.validate({ name, description, title }, { abortEarly: true });
+        const validationResult = await createGameValidation.validate({ name, description }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
