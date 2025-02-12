@@ -82,6 +82,23 @@ const createContest = async (request, response) => {
         const result = await contestServices.createContest(dataToInsert);
 
         if (result) {
+
+            request.io.emit("contestCreated", {
+                id: result._id,
+                name: result.name,
+                description: result.description,
+                gameId: result.gameId,
+                gameType: result.gameType,
+                contestDate: result.contestDate,
+                contestTime: result.contestTime,
+                reqCoinsToJoin: result.reqCoinsToJoin,
+                winningPrice: result.winningPrice,
+                playersLimit: result.playersLimit,
+                roomId: result.roomId,
+                createdBy: result.createdBy,
+                createdAt: result.createdAt,
+            });
+            
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Contest created successfully",

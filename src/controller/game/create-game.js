@@ -72,6 +72,17 @@ const createGame = async (request, response) => {
         const result = await gameServices.createGame(dataToInsert);
 
         if (result) {
+
+            request.io.emit("newGameCreated", {
+                id: result._id,
+                name: result.name,
+                description: result.description,
+                title: result.title,
+                gamefiles: result.gamefiles,
+                addedBy: result.addedBy,
+                createdAt: result.createdAt,
+            });
+
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Game added successfully",

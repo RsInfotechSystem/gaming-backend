@@ -35,6 +35,14 @@ const createCoin = async (request, response) => {
         const result = await coinServices.createCoin(dataToInsert);
 
         if (result) {
+
+            request.io.emit("coinAdded",{
+                id: result._id,
+                coinsCount: result.coinsCount,
+                rupeesAmt: result.rupeesAmt,
+                createdAt: result.createdAt,
+            })
+            
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Coin value added successfully",

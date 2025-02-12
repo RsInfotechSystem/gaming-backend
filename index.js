@@ -11,7 +11,12 @@ const socketIo = require("socket.io");
 dotenv.config();
 
 const server = http.createServer(app);
-const io = socketIo(server)
+const io = socketIo(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+})
 
 // Middleware
 app.use(cors({ origin: "*" }));
@@ -68,6 +73,6 @@ process.on('SIGINT', async () => {
 });
 
 // listen on PORT
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT} 🏃‍♂️`);
 });

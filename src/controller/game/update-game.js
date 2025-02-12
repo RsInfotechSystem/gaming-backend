@@ -77,6 +77,15 @@ const updateGame = async (request, response) => {
         const result = await gameServices.updateGame(gameId, dataToInsert);
 
         if (result) {
+
+            request.io.emit("gameUpdated", {
+                gameId,
+                name,
+                description,
+                title,
+                gamefiles: dataToInsert.gamefiles,
+            });
+            
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Game updated successfully",
