@@ -36,6 +36,13 @@ const updateCoin = async (request, response) => {
         const result = await coinServices.updateCoin(coinId, { coinsCount, rupeesAmt });
 
         if (result) {
+
+            request.io.emit("coinUpdated", {
+                id: result._id,
+                coinsCount: result.coinsCount,
+                rupeesAmt: result.rupeesAmt,
+                updatedAt: result.updatedAt,
+            })
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Coin value updated successfully",

@@ -91,6 +91,25 @@ const updateContest = async (request, response) => {
         const result = await contestServices.updateContest(contestId, dataToInsert);
 
         if (result) {
+
+            request.io.emit("contestUpdated",{
+                id: result._id,
+                name: result.name,
+                description: result.description,
+                gameId: result.gameId,
+                gameType: result.gameType,
+                contestDate: result.contestDate,
+                contestTime: result.contestTime,
+                reqCoinsToJoin: result.reqCoinsToJoin,
+                winningPrice: result.winningPrice,
+                playersLimit: result.playersLimit,
+                roomId: result.roomId,
+                passwordToJoin: result.passwordToJoin,
+                contestFiles: result.contestFiles,
+                updatedBy: result.updatedBy,
+                updatedAt: result.updatedAt,
+            })
+            
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Contest updated successfully",
