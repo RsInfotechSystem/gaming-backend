@@ -1,17 +1,15 @@
 const coinServices = require("../../db.services.js/coin.service");
 
-const getCoinListForUser= async (request, response) => {
+const getCoinListForUser = async (request, response) => {
     try {
         // const {page} = request.body;
 
         const coinList = await coinServices.getCoinList()
-        console.log("coinList :",coinList);
-        
         if (coinList?.totalRecords > 0) {
             response.status(200).json({
                 status: "SUCCESS",
                 message: "Coin fetch successfully",
-                coinList
+                ...coinList
             });
             return;
         } else {
