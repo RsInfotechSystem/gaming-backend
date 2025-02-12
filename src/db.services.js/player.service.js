@@ -156,6 +156,13 @@ const playerServices = {
             throw error;
         }
     },
+    updatePlayerAvailableCoins : async (email,coinsCount) => {
+        try{
+            return await Player.increment({availableCoins : coinsCount },{ where: { email: email, isDeleted: false } });
+        }catch(error){
+            throw error;
+        }
+    },
     deletePlayer: async (playerId) => {
         try {
             return await Player.update({ isDeleted: true }, { where: { id: playerId, isDeleted: false } });
