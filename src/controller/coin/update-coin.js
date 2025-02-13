@@ -27,21 +27,21 @@ const updateCoin = async (request, response) => {
             return;
         }
 
-        // const dataToInsert = {
-        //     name: name?.toLowerCase(),
-        //     tab
-        // }
+        const dataToUpdate = {
+            coinsCount : coinsCount?coinsCount:isCoinExist.coinsCount,
+            rupeesAmt : rupeesAmt?rupeesAmt:isCoinExist.rupeesAmt
+        }
 
         //Add role in db and send response to client
-        const result = await coinServices.updateCoin(coinId, { coinsCount, rupeesAmt });
-
+        const result = await coinServices.updateCoin(coinId, dataToUpdate);
+        console.log("Data :",coinId);
+        
         if (result) {
 
             request.io.emit("coinUpdated", {
-                id: result._id,
-                coinsCount: result.coinsCount,
-                rupeesAmt: result.rupeesAmt,
-                updatedAt: result.updatedAt,
+                id: coinId,
+                coinsCount: dataToUpdate.coinsCount,
+                rupeesAmt: dataToUpdate.rupeesAmt,
             })
             return response.status(200).json({
                 status: "SUCCESS",
