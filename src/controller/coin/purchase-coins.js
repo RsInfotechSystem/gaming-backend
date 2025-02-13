@@ -97,11 +97,15 @@ const purchaseCoins = async (request, response) => {
 
     // const socketUser = memberId ? [memberId] : [];
 
+    const playersUpdatedData = await playerServices.getPlayerByEmail(email)
+
     const result = await transactionServices.addTransaction(TransactionData);
     if (result?.id) {
+
       return response.status(200).json({
         status: "SUCCESS",
         message: `Coin Purchased successfully`,
+        availableCoins : playersUpdatedData.availableCoins
       });
     } else {
         return response.status(200).json({
@@ -111,6 +115,8 @@ const purchaseCoins = async (request, response) => {
       
     }
   } catch (error) {
+    console.log("error",error);
+    
     return response.status(500).json({
       status: "FAILED",
       message: error.message,

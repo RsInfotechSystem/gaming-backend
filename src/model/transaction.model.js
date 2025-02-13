@@ -17,7 +17,6 @@ const Transaction = (Sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
         },
         coinsCount:{
            type: DataTypes.INTEGER,
