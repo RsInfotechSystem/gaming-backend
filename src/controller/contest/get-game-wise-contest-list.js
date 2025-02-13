@@ -1,18 +1,18 @@
 const contestServices = require("../../db.services.js/contest.service");
 
-const getGameWiseContestList =async (request, response) => {
-    try{
+const getGameWiseContestList = async (request, response) => {
+    try {
 
-        const {page, searchString, gameId} = request.body
+        const { page, searchString, gameId } = request.body
 
-        if(!gameId){
-            return response(200).json({
-                status : "FAILED",
-                message : "Game ID is missing"
+        if (!gameId) {
+            return response.status(200).json({
+                status: "FAILED",
+                message: "Game ID is missing"
             });
         }
 
-        const contestList = await contestServices.getGameWiseContestList(page,searchString,gameId)
+        const contestList = await contestServices.getGameWiseContestList(page, searchString, gameId)
         if (contestList.totalPages > 0) {
             response.status(200).json({
                 status: "SUCCESS",
@@ -27,10 +27,12 @@ const getGameWiseContestList =async (request, response) => {
             });
             return;
         }
-    }catch(error){
+    } catch (error) {
+        console.log("error : ", error);
+
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message
+            status: "FAILED",
+            message: error.message
         })
     }
 }
