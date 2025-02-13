@@ -18,7 +18,7 @@ exports.deleteCoinValidation = Joi.object().keys({
 
 exports.purchaseCoinValidation = Joi.object().keys({
     coinId: Joi.string().length(36).required(),
-    TransactionId: Joi.string().required(),
+    transactionId: Joi.string().required(),
     name: Joi.string().required(),
     mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
         'string.pattern.base': 'Invalid mobile number format',
