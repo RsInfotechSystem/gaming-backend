@@ -14,6 +14,7 @@ const getContestWinsList = require("../controller/contest/contest-wins-list");
 const getGameWiseContestList = require("../controller/contest/get-game-wise-contest-list");
 const getUpcomingContestList = require("../controller/contest/get-upcoming-contest-list");
 const getWinnerPlayerList = require("../controller/contest/get-winning-player-list");
+const addRoomId = require("../controller/contest/add-room-id");
 
 const contestRoutes = require("express").Router();
 
@@ -31,6 +32,7 @@ contestRoutes.post("/contest-wins-list", authenticatePlayerJWT, getContestWinsLi
 contestRoutes.post("/get-game-wise-contest-list", authenticatePlayerJWT, getGameWiseContestList);
 contestRoutes.post("/get-upcoming-contest-list", authenticatePlayerJWT, getUpcomingContestList);
 contestRoutes.post("/get-winning-player-list", authenticatePlayerJWT, getWinnerPlayerList);
+contestRoutes.post("/update-room-id", authenticateUserJWT, addRoomId);
 
 
 module.exports = contestRoutes;
