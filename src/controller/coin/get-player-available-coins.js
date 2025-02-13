@@ -9,6 +9,7 @@ const getPlayerAvailableCoins = async (request, response) => {
                 status: "SUCCESS",
                 message: "Coin fetch successfully",
                 coin: coins?.availableCoins ?? 0,
+                user: coins
             });
         } else {
             return response.status(200).json({
