@@ -98,7 +98,7 @@ const purchaseCoins = async (request, response) => {
     // const socketUser = memberId ? [memberId] : [];
 
     const result = await transactionServices.addTransaction(TransactionData);
-    if (result?._id) {
+    if (result?.id) {
       return response.status(200).json({
         status: "SUCCESS",
         message: `Coin Purchased successfully`,
