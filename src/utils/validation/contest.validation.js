@@ -11,8 +11,7 @@ exports.createContestValidation = Joi.object().keys({
     reqCoinsToJoin: Joi.number().required(),
     winningPrice: Joi.number().required(),
     playersLimit: Joi.number().required(),
-    roomId: Joi.string().allow(null, "").optional(),
-    passwordToJoin: Joi.string().allow(null, "").optional(),
+    noOfWinners: Joi.number().required(),
 });
 
 
