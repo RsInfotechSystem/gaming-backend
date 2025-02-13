@@ -1,5 +1,6 @@
 const contestServices = require("../../db.services.js/contest.service");
 const gameServices = require("../../db.services.js/game.service");
+const gameTypeArray = require("../../utils/helper/gameType");
 const runMiddleware = require("../../utils/helper/multer.middleware");
 const { uploadImg } = require("../../utils/multer/upload.img");
 const { createContestValidation } = require("../../utils/validation/contest.validation");
@@ -10,21 +11,21 @@ const createContest = async (request, response) => {
         const { id } = request
 
         //Upload image file using multer
-        const file = await runMiddleware(request, response, uploadImg.array("contestFiles", 10));
-        if (file) {
-            response.status(200).json({
-                status: "FAILED",
-                message: file?.code,
-            });
-            return;
-        };
+        // const file = await runMiddleware(request, response, uploadImg.array("contestFiles", 10));
+        // if (file) {
+        //     response.status(200).json({
+        //         status: "FAILED",
+        //         message: file?.code,
+        //     });
+        //     return;
+        // };
 
-        const contestDetails = JSON.parse(request.body.contestDetails);
+        // const contestDetails = JSON.parse(request.body.contestDetails);
         //extract data from request body
-        const { name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin } = contestDetails;
+        const { name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners } = request.body;
 
         //check validation
-        const validationResult = await createContestValidation.validate({ name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin }, { abortEarly: true });
+        const validationResult = await createContestValidation.validate({ name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -53,29 +54,38 @@ const createContest = async (request, response) => {
         // }
 
         // Allowed game types
-        const allowedGameTypes = ["solo", "duo", "squad"];
-        if (!allowedGameTypes.includes(gameType)) {
+        if (!gameTypeArray.includes(gameType.toLowerCase())) {
             return response.status(400).json({
                 status: "FAILED",
                 message: "Invalid game type. Allowed values: solo, duo, squad",
             });
         }
 
-        const attachment = request.files?.map((file) => {
-            const splitUrlArray = file?.destination?.split("/");
-            const filteredUrl = splitUrlArray[splitUrlArray.length - 3] + '/' + splitUrlArray[splitUrlArray.length - 2] + '/' + splitUrlArray[splitUrlArray.length - 1] + file.filename;
-            return {
-                documentName: file.originalname,
-                fileUrl: filteredUrl,
-            }
-        }) ?? [];
+        // const attachment = request?.files?.map((file) => {
+        //     const splitUrlArray = file?.destination?.split("/");
+        //     const filteredUrl = splitUrlArray[splitUrlArray.length - 3] + '/' + splitUrlArray[splitUrlArray.length - 2] + '/' + splitUrlArray[splitUrlArray.length - 1] + file.filename;
+        //     return {
+        //         documentName: file.originalname,
+        //         fileUrl: filteredUrl,
+        //     }
+        // }) ?? [];
 
 
         const dataToInsert = {
-            name, description, gameId, gameType, contestDate,
-            contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin,
+            name, 
+            description, 
+            gameId, 
+            gameType, 
+            contestDate,
+            contestTime, 
+            reqCoinsToJoin, 
+            winningPrice, 
+            playersLimit, 
+            noOfWinners,
+            roomId: null,
+            passwordToJoin: null,
             createdBy: id,
-            contestFiles: attachment ?? []
+            contestFiles: []
         }
 
         //Add contest in db and send response to client
@@ -98,7 +108,7 @@ const createContest = async (request, response) => {
                 createdBy: result.createdBy,
                 createdAt: result.createdAt,
             });
-            
+
             return response.status(200).json({
                 status: "SUCCESS",
                 message: "Contest created successfully",

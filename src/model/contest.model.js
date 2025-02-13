@@ -85,8 +85,8 @@ const Contest = (Sequelize, DataTypes) => {
             },
             allowNull: true
         },
-        gameUserName: {
-            type: DataTypes.STRING,
+        noOfWinners: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
         createdBy: {
