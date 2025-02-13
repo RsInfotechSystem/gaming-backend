@@ -8,7 +8,7 @@ const addRoomId = async (request, response) => {
         const { contestId, roomId, password } = request.body;
 
         //check validation
-        const validationResult = await addRoomIdvalidation.validate({ id: contestId, roomId, password }, { abortEarly: true });
+        const validationResult = await addRoomIdvalidation.validate({ contestId, roomId, password }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
