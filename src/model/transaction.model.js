@@ -25,9 +25,9 @@ const Transaction = (Sequelize, DataTypes) => {
             defaultValue: 0
         },
         amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
-            defaultValue: 0
+            defaultValue: 0.00
         },
         transactionId: {
             type: DataTypes.STRING,
