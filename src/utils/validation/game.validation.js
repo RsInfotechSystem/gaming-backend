@@ -9,9 +9,9 @@ exports.createGameValidation = Joi.object().keys({
 
 exports.updateGameValidation = Joi.object().keys({
     gameId: Joi.string().length(36).required(),
-    name: Joi.string().required(),
-    description: Joi.string(),
-    title: Joi.string().required(),
+    name: Joi.string().allow(""),
+    description: Joi.string().allow(""),
+    title: Joi.string().allow(""),
     oldGameFiles: Joi.array().items().allow(null, "").optional(),
 });
 

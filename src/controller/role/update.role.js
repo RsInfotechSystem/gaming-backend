@@ -27,18 +27,18 @@ const updateRole = async (request, response) => {
         };
 
         //ensure role should not be similar to the existing one
-        const existingRole = await roleServices.getExistingRoleByName(roleId, name?.toLowerCase());
-        if (existingRole) {
-            response.status(200).json({
-                status: "FAILED",
-                message: `${existingRole?.role} role is already exist.`
-            });
-            return;
-        };
+        // const existingRole = await roleServices.getExistingRoleByName(roleId, name?.toLowerCase());
+        // if (existingRole) {
+        //     response.status(200).json({
+        //         status: "FAILED",
+        //         message: `${existingRole?.role} role is already exist.`
+        //     });
+        //     return;
+        // };
 
         const dataToUpdate = {
-            name: name?.toLowerCase(),
-            tab
+            name: name?.toLowerCase() ? name : isExist.name ,
+            tab : tab ? tab : isExist.tab
         };
 
         //update data into db and send response to client

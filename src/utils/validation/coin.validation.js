@@ -8,8 +8,8 @@ exports.createCoinValidation = Joi.object().keys({
 
 exports.updateCoinValidation = Joi.object().keys({
     coinId: Joi.string().length(36).required(),
-    coinsCount: Joi.number().required(),
-    rupeesAmt: Joi.number().required(),
+    coinsCount: Joi.number(),
+    rupeesAmt: Joi.number(),
 });
 
 exports.deleteCoinValidation = Joi.object().keys({

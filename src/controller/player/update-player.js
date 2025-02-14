@@ -41,21 +41,21 @@ const updatePlayer = async (request, response) => {
         }
 
         //check player already exist with userName
-        const isUsernameExist = await playerServices.getPlayerByUsername(userName);
-        if (isUsernameExist) {
-            response.status(200).json({
-                status: "FAILED",
-                message: "Player already exist with this username",
-            });
-            return;
-        }
+        // const isUsernameExist = await playerServices.getPlayerByUsername(userName);
+        // if (isUsernameExist) {
+        //     response.status(200).json({
+        //         status: "FAILED",
+        //         message: "Player already exist with this username",
+        //     });
+        //     return;
+        // }
 
         const dataToUpdate = {
-            name,
-            email,
-            mobile,
-            dob,
-            userName,
+            name : name ? name : isPlayerExist.name,
+            email : email ? email : isPlayerExist.email,
+            mobile : mobile ? mobile : isPlayerExist.mobile,
+            dob : dob ? dob : isPlayerExist.dob,
+            userName : userName ? userName : isPlayerExist.userName,
         };
 
         const updatedPlayer = await playerServices.updatePlayer(playerId, dataToUpdate);
