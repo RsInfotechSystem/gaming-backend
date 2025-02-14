@@ -16,11 +16,11 @@ exports.idValidation = Joi.object().keys({
 
 exports.updatePlayerValidation = Joi.object().keys({
     playerId: Joi.string().length(36).required(),
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    mobile: Joi.string().regex(/^[0-9]{10}$/).required(),
-    dob: Joi.date().required(),
-    userName: Joi.string().required(),
+    name: Joi.string().allow(""),
+    email: Joi.string().email().allow(""),
+    mobile: Joi.string().regex(/^[0-9]{10}$/).allow(""),
+    dob: Joi.date(),
+    userName: Joi.string().allow(""),
 });
 
 exports.loginPlayerValidation = Joi.object().keys({

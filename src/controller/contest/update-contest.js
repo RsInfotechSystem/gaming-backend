@@ -52,15 +52,6 @@ const updateContest = async (request, response) => {
         //     return;
         // }
 
-        const isGameExist = await gameServices.getGameById(gameId);
-        if (!isGameExist) {
-            response.status(200).json({
-                status: "FAILED",
-                message: "Contest already exist with this name",
-            });
-            return;
-        }
-
         // Allowed game types
         const allowedGameTypes = ["solo", "duo", "squad"];
         if (!allowedGameTypes.includes(gameType)) {
@@ -91,7 +82,7 @@ const updateContest = async (request, response) => {
             playersLimit : playersLimit ? playersLimit : isContestExist.playersLimit, 
             roomId : roomId ? roomId : isContestExist.roomId, 
             passwordToJoin : passwordToJoin ? passwordToJoin : isContestExist.passwordToJoin,
-            createdBy: id,
+            createdBy: request.id,
             contestFiles: [...attachment, ...oldContestFiles] ?? [],
         }
 
@@ -101,20 +92,20 @@ const updateContest = async (request, response) => {
         if (result) {
 
             request.io.emit("contestUpdated",{
-                id: result._id,
-                name: result.name,
-                description: result.description,
-                gameType: result.gameType,
-                contestDate: result.contestDate,
-                contestTime: result.contestTime,
-                reqCoinsToJoin: result.reqCoinsToJoin,
-                winningPrice: result.winningPrice,
-                playersLimit: result.playersLimit,
-                roomId: result.roomId,
-                passwordToJoin: result.passwordToJoin,
-                contestFiles: result.contestFiles,
-                updatedBy: result.updatedBy,
-                updatedAt: result.updatedAt,
+                id: contestId,
+                name: dataToInsert.name,
+                description: dataToInsert.description,
+                gameType: dataToInsert.gameType,
+                contestDate: dataToInsert.contestDate,
+                contestTime: dataToInsert.contestTime,
+                reqCoinsToJoin: dataToInsert.reqCoinsToJoin,
+                winningPrice: dataToInsert.winningPrice,
+                playersLimit: dataToInsert.playersLimit,
+                roomId: dataToInsert.roomId,
+                passwordToJoin: dataToInsert.passwordToJoin,
+                contestFiles: dataToInsert.contestFiles,
+                updatedBy: request.id,
+                updatedAt: request.id,
             })
             
             return response.status(200).json({
@@ -129,6 +120,8 @@ const updateContest = async (request, response) => {
         }
 
     } catch (error) {
+        console.log("error : ",error);
+        
         response.status(500).json({
             status: "FAILED",
             message: error.message,

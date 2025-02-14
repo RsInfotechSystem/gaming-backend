@@ -98,9 +98,10 @@ const updateGame = async (request, response) => {
     if (result) {
       request.io.emit("gameUpdated", {
         gameId,
-        name: name ? name : isGameExist.name,
-        description: description ? description : isGameExist.description,
-        title: title ? title : isGameExist.title,
+        name: dataToInsert.name,
+        description: dataToInsert.description,
+        title: dataToInsert.title,
+        updatedBy : dataToInsert.id,
         gamefiles: dataToInsert.gamefiles,
       });
 
@@ -115,8 +116,6 @@ const updateGame = async (request, response) => {
       });
     }
   } catch (error) {
-    console.log("error", error);
-
     response.status(500).json({
       status: "FAILED",
       message: error.message,

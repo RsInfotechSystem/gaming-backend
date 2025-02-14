@@ -64,7 +64,7 @@ const contestServices = {
             const contestList = await Contest.findAll({
                 where: filter,
                 include: [
-                    { model: Game, as: "game", where: gameFilter, required: false, attributes: [] },
+                    { model: Game, as: "game", where: gameFilter, required: false, attributes: ["id", "name"] },
                     { model: User, as: "createdByUser", where: userFilter, required: false, attributes: [] },
                     { model: User, as: "updatedByUser", where: userFilter, required: false, attributes: [] }
                 ],

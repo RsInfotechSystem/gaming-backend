@@ -6,10 +6,6 @@ const User = (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false,
         },
-        roleName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         name: {
             type: DataTypes.STRING,
             allowNull: false,

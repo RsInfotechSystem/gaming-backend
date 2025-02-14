@@ -43,3 +43,9 @@ exports.declareWinnerValidation = Joi.object().keys({
     contestId: Joi.string().length(36).required(),
     playerId: Joi.string().length(36).required(),
 })
+
+exports.addRoomIdvalidation = Joi.object().keys({
+    contestId: Joi.string().length(36).required(),
+    roomId: Joi.string().required(),
+    password: Joi.string().required(),
+})
