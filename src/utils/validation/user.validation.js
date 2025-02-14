@@ -22,12 +22,12 @@ exports.loginValidationSchema = Joi.object().keys({
 //?-----------Update User Validation------------------
 exports.updateUserValidation = Joi.object().keys({
     userId: Joi.string().length(36).required(),
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+    name: Joi.string().allow(""),
+    email: Joi.string().email().allow(""),
+    mobile: Joi.string().pattern(/^[0-9]{10}$/).allow("").messages({
         'string.pattern.base': 'Invalid mobile number format',
     }),
-    roleId: Joi.string().length(36).required()
+    roleId: Joi.string().length(36).allow("")
 });
 
 

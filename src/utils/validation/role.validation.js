@@ -14,8 +14,8 @@ exports.idValidation = Joi.object().keys({
 
 exports.updateRoleValidation = Joi.object().keys({
     roleId: Joi.string().length(36).required(),
-    name: Joi.string().required(),
-    tab: Joi.array().min(1).items().required(),
+    name: Joi.string().allow(""),
+    tab: Joi.array().min(1).items(),
 });
 
 

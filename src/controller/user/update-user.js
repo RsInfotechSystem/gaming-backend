@@ -28,16 +28,6 @@ const updateUser = async (request, response) => {
             });
         };
 
-        //ensure user should not be similar to the existing one
-        const existingUser = await userServices.getExistingUserByMobileNo(userId, mobile?.toString());
-        if (existingUser) {
-            response.status(200).json({
-                status: "FAILED",
-                message: `User already exist with same mobile no.`
-            });
-            return;
-        }
-
 
         //check user active or not
         if (isExist?.isActive === false) {
@@ -48,30 +38,22 @@ const updateUser = async (request, response) => {
         }
 
         //check role exist or not
-        const isRoleExist = await roleServices.getRoleById(roleId);
-        if (!isRoleExist) {
-            return response.status(200).json({
-                status: "FAILED",
-                message: "Role does not exist"
-            })
-        };
+        if(roleId){
+            const isRoleExist = await roleServices.getRoleById(roleId);
+            if (!isRoleExist) {
+                return response.status(200).json({
+                    status: "FAILED",
+                    message: "Role does not exist"
+                })
+            };
 
-        // //check location exist or not
-        // const isLocationExist = await locationServices.getLocationById(locationId);
-        // if (!isLocationExist) {
-        //     return response.status(200).json({
-        //         status: "FAILED",
-        //         message: "Location does not exist"
-        //     })
-        // };
-
-
+        }
+        
         const dataToUpdate = {
-            name: name?.toLowerCase(),
-            email,
-            mobile: mobile?.toString(),
-            roleId,
-            roleName: isRoleExist?.name,
+            name: name?.toLowerCase() ? name : isExist.name,
+            email : email ? email : isExist.email ,
+            mobile: mobile?.toString() ? mobile : isExist.mobile,
+            roleId : roleId ? roleId: isExist.roleId,
         };
 
         //update data into db and send response to client
