@@ -1,4 +1,5 @@
 const contestServices = require("../../db.services.js/contest.service");
+const contestPlayerServices = require("../../db.services.js/contestPlayer.service");
 const gameServices = require("../../db.services.js/game.service");
 const playerServices = require("../../db.services.js/player.service");
 const notificationServices = require("../../db.services.js/notification.service");
@@ -54,42 +55,45 @@ const joinContest = async (request, response) => {
       });
     }
 
-    if (isContestExist?.dataValues?.joinedPlayers.includes(id)) {
+    // if (isContestExist?.dataValues?.joinedPlayers.includes(id)) {
+    //   return response.status(200).json({
+    //     status: "FAILED",
+    //     message: "You have already joined this contest",
+    //   });
+    // }
+
+    const isAlreadyJoined = await contestPlayerServices.getContestByPlayerIdAndContestId(id,contestId)
+    if(isAlreadyJoined){
       return response.status(200).json({
-        status: "FAILED",
-        message: "You have already joined this contest",
+        status : "FAILED",
+        message : "You have already joined this contest"
       });
     }
 
-    // if (isContestExist?.dataValues?.joinedPlayers.includes(id))
-    let allPlayers = [...isContestExist?.dataValues?.joinedPlayers, id];
-
-    if (isContestExist?.dataValues?.playersLimit < allPlayers?.length) {
+    const playerJoinedCount = await contestPlayerServices.countPlayersInContest(contestId);
+    if (isContestExist?.dataValues?.playersLimit <= playerJoinedCount) {
       return response.status(200).json({
         status: "FAILED",
         message: "Room is full!",
       });
     }
 
-    const dataToUpdate = {
-      joinedPlayers: allPlayers,
-      joinedCount: allPlayers.length
+    const dataToInsert = {
+      contestId: contestId,
+      playerId: id,
+      gameUserName : gameUserName
     };
 
     //Add contest in db and send response to client
-    const result = await contestServices.updateContest(contestId, dataToUpdate);
+    const result = await contestPlayerServices.createContestPlayer(dataToInsert);
 
-    if (result) {
+    if (result.id) {
       let availableCoins =
         isPlayerExist?.dataValues?.availableCoins -
         isContestExist?.dataValues?.reqCoinsToJoin;
 
       const updatedPlayer = await playerServices.updatePlayer(id, {
         availableCoins: availableCoins,
-        joinedContests: [
-          ...isPlayerExist?.dataValues?.joinedContests,
-          contestId,
-        ],
       });
 
       const notifications = {
@@ -125,14 +129,13 @@ const joinContest = async (request, response) => {
         });
       }
 
-      io.emit("contestUpdated", {
+     request.io.emit("contestUpdated", {
         contestId,
-        joinedPlayers: allPlayers,
-        joinedCount: allPlayers.length
+        joinedCount: playerJoinedCount + 1
       });
 
       if (global.adminSocketId) {
-        io.to(global.adminSocketId).emit("newPlayerJoined", {
+        request.io.to(global.adminSocketId).emit("newPlayerJoined", {
           contestId,
           playerId: id,
           playerName: isPlayerExist.userName

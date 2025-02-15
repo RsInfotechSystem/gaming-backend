@@ -203,6 +203,23 @@ const contestServices = {
             throw error;
         }
     },
+    deleteContestByGameId : async (gameId) => {
+        try{
+            return await Contest.update(
+                {
+                    isDeleted: true,
+                },
+                {
+                    where : {
+                        gameId : gameId,
+                        isDeleted : false,
+                    },
+                }
+            )
+        }catch(error){
+            throw error
+        }
+    } ,
     getActiveContest: async () => {
         try {
             return await Contest.findAll({
