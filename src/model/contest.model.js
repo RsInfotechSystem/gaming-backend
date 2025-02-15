@@ -49,16 +49,6 @@ const Contest = (Sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        joinedCount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
-        },
-        joinedPlayers: {
-            type: DataTypes.JSONB,  // Store as an array of player UUIDs
-            allowNull: false,
-            defaultValue: [],  // Ensure an empty array as default
-        },
         roomId: {
             type: DataTypes.STRING,
             allowNull: true,

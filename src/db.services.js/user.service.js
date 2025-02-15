@@ -77,9 +77,6 @@ const userServices = {
     try {
       let filter = {
         isDeleted: false,
-        roleName: {
-          [Op.ne]: "admin",
-        },
         id: {
           [Op.ne]: id,
         },
@@ -120,7 +117,7 @@ const userServices = {
           { roleId: { [Op.in]: roleIdArray } },
         ];
       }
-
+      page = (page && page > 0) ? parseInt(page) : 1;
       const offset = (page - 1) * limit;
       const { count: totalRecords, rows: users } = await User.findAndCountAll({
         where: filter,

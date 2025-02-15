@@ -1,4 +1,5 @@
 const gameServices = require("../../db.services.js/game.service");
+const contestServices = require("../../db.services.js/contest.service");
 const { gameIdsValidationSchema } = require("../../utils/validation/game.validation");
 
 
@@ -32,9 +33,13 @@ const deleteSelectedGames = async (request, response) => {
         //delete the selected Game from db and send response to client
         const result = await gameServices.deleteGame(gameIds);
         if (result > 0) {
+            for(i = 0 ; i < gameIds?.length; i++){
+                const gameId = gameIds[i];
+                await contestServices.deleteContestByGameId(gameId);
+            }
             return response.status(200).json({
                 status: 'SUCCESS',
-                message: 'Games deleted successfully.'
+                message: 'Games and related contests deleted successfully.'
             });
         } else {
             return response.status(200).json({
@@ -42,7 +47,7 @@ const deleteSelectedGames = async (request, response) => {
                 message: 'Failed to delete games.'
             });
         };
-    } catch (error) {
+    } catch (error) {     
         return response.status(500).json({
             status: 'FAILED',
             message: error.message
