@@ -36,7 +36,7 @@ const contestServices = {
         }
     },
 
-    getContestList: async (page = 1, searchString) => {
+    getContestList: async (page, searchString) => {
         try {
             const filter = { isDeleted: false };
 
@@ -59,7 +59,7 @@ const contestServices = {
             const totalRecords = await Contest.count({
                 where: filter
             });
-
+            page = (page && page > 0) ? parseInt(page) : 1;
             // Fetch paginated records
             const contestList = await Contest.findAll({
                 where: filter,

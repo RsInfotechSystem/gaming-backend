@@ -1,4 +1,5 @@
 const contestServices = require("../../db.services.js/contest.service");
+const contestPlayerServices = require("../../db.services.js/contestPlayer.service")
 const playerServices = require("../../db.services.js/player.service");
 const notificationServices = require("../../db.services.js/notification.service");
 const runMiddleware = require("../../utils/helper/multer.middleware");
@@ -54,12 +55,14 @@ const declareWinner = async (request, response) => {
 
         // console.log("isContestExist?.dataValues?.joinedPlayers.includes(playerId) : ", isContestExist?.dataValues?.joinedPlayers.includes(playerId));
 
-        if (!isContestExist?.dataValues?.joinedPlayers.includes(playerId)) {
-            return response.status(200).json({
-                status: "FAILED",
-                message: "The selected player has not joined this contest.",
-            });
-        }
+        const isPlayerJoined = await contestPlayerServices.getContestPlayerByContestIdAndPlayerId(contestId, playerId);
+
+            if (!isPlayerJoined) {
+                return response.status(200).json({
+                    status: "FAILED",
+                    message: "The selected player has not joined this contest.",
+                });
+            }
 
         const attachment = request.files?.map((file) => {
             const splitUrlArray = file?.destination?.split("/");
@@ -109,7 +112,7 @@ const declareWinner = async (request, response) => {
                 })
             }
 
-            io.emit("winnerDeclared", {
+            request.io.emit("winnerDeclared", {
                 contestId,
                 winnerId: playerId,
                 winnerName: isPlayerExist.userName,
@@ -117,14 +120,14 @@ const declareWinner = async (request, response) => {
             });
 
             if (global.adminSocketId) {
-                io.to(global.adminSocketId).emit("newWinnerDeclared", {
+                request.io.to(global.adminSocketId).emit("newWinnerDeclared", {
                     contestId,
                     winnerId: playerId,
                     winnerName: isPlayerExist.userName,
                 });
             }
 
-            io.to(`user_${playerId}`).emit("youWon", {
+            request.io.to(`user_${playerId}`).emit("youWon", {
                 contestId,
                 winnerName: isPlayerExist.userName,
                 prize: isContestExist.winningPrice,
