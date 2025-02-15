@@ -376,6 +376,58 @@ const contestServices = {
         }
     },
 
+    getGameWiseUpcomingContestList: async (page = 1, searchString, gameId) => {
+        try {
+            const currentDate = new Date();
+            const currentDateString = currentDate.toISOString().split("T")[0];
+            const currentTimeString = currentDate.toISOString().split("T")[1].split(".")[0]
+
+            const filter = {
+                isDeleted: false,
+                gameId: gameId,
+                contestDate: {
+                    [Op.gte]: currentDateString,
+                },
+                contestTime: {
+                    [Op.gte]: currentTimeString,
+                },
+            }
+
+            if (searchString) {
+                filter[Op.or] = [
+                    { name: { [Op.iLike]: `%${searchString}%` } },
+                    { description: { [Op.iLike]: `%${searchString}%` } },
+                ];
+            }
+
+            const totalRecords = await Contest.count({
+                where: filter,
+                include: [
+                    { model: Game, as: "game", where: { id: gameId }, required: true },
+                ],
+            });
+
+            const contestList = await Contest.findAll({
+                where: filter,
+                include: [
+                    { model: Game, as: "game", where: { id: gameId }, required: true },
+                ],
+                // order: [["updatedAt", "DESC"]],
+                order: [["contestDate", "ASC"], ["contestTime", "ASC"]],
+                limit: limit,
+                offset: (page - 1) * limit,
+            })
+
+            const totalPages = await countPages(totalRecords);
+            return {
+                totalPages,
+                contestList,
+            };
+
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 module.exports = contestServices;
