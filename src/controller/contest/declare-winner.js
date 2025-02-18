@@ -55,7 +55,7 @@ const declareWinner = async (request, response) => {
 
         // console.log("isContestExist?.dataValues?.joinedPlayers.includes(playerId) : ", isContestExist?.dataValues?.joinedPlayers.includes(playerId));
 
-        const isPlayerJoined = await contestPlayerServices.getContestPlayerByContestIdAndPlayerId(contestId, playerId);
+        const isPlayerJoined = await contestPlayerServices.getContestByPlayerIdAndContestId(playerId, contestId);
 
             if (!isPlayerJoined) {
                 return response.status(200).json({
