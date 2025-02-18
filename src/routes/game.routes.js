@@ -6,6 +6,8 @@ const getGameList = require("../controller/game/get-game-list");
 const getGameById = require("../controller/game/get-game-by-id");
 const deleteSelectedGames = require("../controller/game/delete-game");
 const getActiveGames = require("../controller/game/get-active-game");
+const authenticatePlayerJWT = require("../utils/middleware/auth-player");
+const getAdminGameList = require("../controller/game/get-admin-game-list");
 // const gamesList = require("../controller/game/get-active-game");
 
 const gameRoutes = require("express").Router();
@@ -13,7 +15,8 @@ const gameRoutes = require("express").Router();
 //!--------------game Routes---------------------
 gameRoutes.post("/create-game", authenticateUserJWT, tabAccessMiddleware("game list"), createGame);
 gameRoutes.post("/update-game", authenticateUserJWT, tabAccessMiddleware("game list"), updateGame);
-gameRoutes.post("/get-game-list", getGameList);
+gameRoutes.post("/get-game-list", authenticatePlayerJWT, getGameList);
+gameRoutes.post("/get-admin-game-list", authenticateUserJWT, getAdminGameList);
 gameRoutes.post("/get-game-by-id", getGameById);
 gameRoutes.post("/delete-game", authenticateUserJWT, tabAccessMiddleware("game list"), deleteSelectedGames);
 gameRoutes.get("/get-active-game", authenticateUserJWT, getActiveGames);
