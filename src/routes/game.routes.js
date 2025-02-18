@@ -16,6 +16,6 @@ gameRoutes.post("/update-game", authenticateUserJWT, tabAccessMiddleware("game l
 gameRoutes.post("/get-game-list", getGameList);
 gameRoutes.post("/get-game-by-id", getGameById);
 gameRoutes.post("/delete-game", authenticateUserJWT, tabAccessMiddleware("game list"), deleteSelectedGames);
-gameRoutes.get("/get-active-game", authenticateUserJWT, getActiveGames)
+gameRoutes.get("/get-active-game", authenticateUserJWT, getActiveGames);
 
 module.exports = gameRoutes;

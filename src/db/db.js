@@ -41,6 +41,7 @@ const Player = require("../model/player.model")(sequelize, DataTypes);
 const PurchaseHistory = require("../model/purchaseHistory.model")(sequelize, DataTypes);
 const Transaction = require("../model/transaction.model")(sequelize, DataTypes);
 const ContestPlayer = require("../model/contestPlayer.model")(sequelize, DataTypes);
+const Wallet = require("../model/wallet.model")(sequelize, DataTypes);
 
 // Define associations
 User.belongsTo(Role, { foreignKey: 'roleId', as: 'role' });
@@ -67,9 +68,11 @@ PurchaseHistory.belongsTo(Player, {
 
 Contest.hasMany(ContestPlayer, { foreignKey : "contestId", as :"joinedPlayers"});
 ContestPlayer.belongsTo(Contest,{foreignKey : "contestId", as : "contest"});
-Player.hasMany(ContestPlayer, {foreignKey : "playerId", as: "contestsJoined"})
-ContestPlayer.belongsTo(Player, {foreignKey : "playerId", as : "player" })
+Player.hasMany(ContestPlayer, {foreignKey : "playerId", as: "contestsJoined"});
+ContestPlayer.belongsTo(Player, {foreignKey : "playerId", as : "player" });
 
+Wallet.belongsTo(Player, { foreignKey: 'playerId', as: 'player' });
+Player.hasOne(Wallet, { foreignKey: 'playerId', as: 'wallet' });
 
 // Game.belongsTo(Coin, { foreignKey: 'coinId', as: 'coin' });   
 
@@ -85,4 +88,4 @@ ContestPlayer.belongsTo(Player, {foreignKey : "playerId", as : "player" })
 
 
 
-module.exports = { sequelize, Role, Location, User, Notification, Game, Player, Coin, Contest, Transaction, PurchaseHistory, ContestPlayer};
+module.exports = { sequelize, Role, Location, User, Notification, Game, Player, Coin, Contest, Transaction, PurchaseHistory, ContestPlayer, Wallet};
