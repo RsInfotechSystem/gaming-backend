@@ -7,23 +7,26 @@ const {
 
 const updateGame = async (request, response) => {
   try {
-    const { id } = request;
+    const { isFileAttached } = request.query;
 
-    //Upload image file using multer
-    const file = await runMiddleware(
-      request,
-      response,
-      uploadImg.array("gamefiles", 10)
-    );
-    if (file) {
-      response.status(200).json({
-        status: "FAILED",
-        message: file?.code,
-      });
-      return;
+    const { id } = request;
+    const gameDetails = null;
+
+    if (isFileAttached === "true") {
+      //Upload image file using multer
+      const file = await runMiddleware(request, response, uploadImg.array("gamefiles", 10));
+      if (file) {
+        response.status(200).json({
+          status: "FAILED",
+          message: file?.code,
+        });
+        return;
+      }
+      gameDetails = JSON.parse(request.body.gameDetails);
+    } else {
+      gameDetails = request.body;
     }
 
-    const gameDetails = JSON.parse(request.body.gameDetails);
 
     //extract data from request body
     const { gameId, name, description, title, oldGameFiles } = gameDetails;
@@ -101,7 +104,7 @@ const updateGame = async (request, response) => {
         name: dataToInsert.name,
         description: dataToInsert.description,
         title: dataToInsert.title,
-        updatedBy : dataToInsert.id,
+        updatedBy: dataToInsert.id,
         gamefiles: dataToInsert.gamefiles,
       });
 
