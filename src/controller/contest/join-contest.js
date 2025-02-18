@@ -112,7 +112,7 @@ const joinContest = async (request, response) => {
         💰 **Entry Fee Paid:** ${isContestExist.reqCoinsToJoin} Coins  
         💳 **Coins Left in Wallet:** ${availableCoins}  
 
-        👥 **Current Warriors in the Battle:** ${allPlayers.length} / ${isContestExist.playersLimit}  
+        👥 **Current Warriors in the Battle:** ${playerJoinedCount} / ${isContestExist.playersLimit}  
 
         🎯 The competition is heating up! Keep an eye on the contest as more players join. Make sure everything is set for a smooth and fair game!`,
         createdBy: id,

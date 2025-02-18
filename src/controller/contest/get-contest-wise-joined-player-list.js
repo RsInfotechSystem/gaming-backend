@@ -16,9 +16,8 @@ const getContestWiseJoinedPlayerList = async (request, response) => {
         const joinedPlayers = await contestPlayerServices.getContestPlayersByContestId(contestId);
         if (joinedPlayers.length === 0) {
             return response.status(200).json({
-              status: "SUCCESS",
-              message: "No players have joined this contest yet",
-              data: []
+              status: "FAILED",
+              message: "No players has joined",
             });
           }
         

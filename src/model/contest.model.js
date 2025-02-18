@@ -101,6 +101,11 @@ const Contest = (Sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
+        },
+        hasJoined : {
+            type : DataTypes.BOOLEAN,
+            defaultValue : false,
+            allowNull : false,
         }
     }, {
         paranoid: true,

@@ -24,6 +24,8 @@ const getContestWisePlayerList = async (request, response) => {
         }
 
     } catch (error) {
+        console.log("error:",error);
+        
         return response.status(500).json({
             status: "FAILED",
             message: error.message,

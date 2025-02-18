@@ -4,9 +4,16 @@ const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
 
-const downloadJoinedPlayerList = async (request, response) => {
+const downloadJoinedPlayerListExcel = async (request, response) => {
     try{
         const { contestId } = request.body;
+
+        if(!contestId){
+            return response.status(200).json({
+                status : "FAILED",
+                message : "contestId is required"
+            })
+        }
 
         const isContestExist = await contestServices.getContestById(contestId);
         if(!isContestExist){
@@ -17,11 +24,10 @@ const downloadJoinedPlayerList = async (request, response) => {
         }
 
         const joinedPlayers = await contestPlayerServices.getContestPlayersByContestId(contestId);
-        if (joinedPlayers.length === 0) {
+        if (!joinedPlayers || joinedPlayers.length === 0) {
             return response.status(200).json({
-              status: "SUCCESS",
-              message: "No players have joined this contest yet",
-              data: []
+              status: "FAILED",
+              message: "No players have joined !",
             });
           }
         
@@ -41,28 +47,43 @@ const downloadJoinedPlayerList = async (request, response) => {
 
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(playerDetails);
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Joined Players");
+        XLSX.utils.book_append_sheet(workbook, worksheet);
 
-
-
+        // const baseFolder = path.resolve(__dirname, "..", "..", "public");
+        // const excelFolder = path.join(baseFolder, "excels");    
+        // await fs.ensureDir(excelFolder); // Ensure directory exists
+        
         // Create directory if not exists
-        const downloadDir = path.join(__dirname, "../../public/downloads");
+        const downloadDir = path.join(__dirname, "../../../public/excels");
         if (!fs.existsSync(downloadDir)) {
             fs.mkdirSync(downloadDir, { recursive: true });
         }
 
-        // Generate Excel file
-        const fileName = `ContestPlayers_${contestId}.xlsx`;
+        // Create a file name
+        const contestName = isContestExist.name.replace(/\s+/g, "_"); // Replace spaces with underscores
+        const contestDate = new Date(isContestExist.contestDate).toISOString().split('T')[0];
+        const contestTime = isContestExist.contestTime.replace(/:/g, "-");
+        const fileName = `${contestName}_${contestDate}_${contestTime}_PlayerList.xlsx`;
+
+        //file path
         const filePath = path.join(downloadDir, fileName);
+        console.log("filePath : ", filePath);
+        
+        //Generate Excel file
         XLSX.writeFile(workbook, filePath);
 
+        // const downloadURL = `${request.protocol}://${request.get('host')}/public/excels/${fileName}`;
+        // console.info("Download URL:", downloadURL);
+
          // Send file for download
-         response.download(filePath, fileName, (err) => {
+         response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+         response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+         response.sendFile(filePath, (err) => {
             if (err) {
-                console.error("Error in downloading file:", err);
+                console.error("Error in sending file:", err);
                 return response.status(500).json({
-                    status: "FAILED",
-                    message: "Error in downloading file"
+                 status: "FAILED",
+                 message: "Error in sending file"
                 });
             }
 
@@ -70,6 +91,8 @@ const downloadJoinedPlayerList = async (request, response) => {
             fs.unlink(filePath, (err) => {
                 if (err) console.error("Error deleting file:", err);
             });
+
+
         });
 
         
@@ -81,4 +104,4 @@ const downloadJoinedPlayerList = async (request, response) => {
     }
 }
 
-module.exports = downloadJoinedPlayerList;
+module.exports = downloadJoinedPlayerListExcel;
