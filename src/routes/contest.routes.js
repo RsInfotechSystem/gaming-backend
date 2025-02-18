@@ -30,7 +30,7 @@ contestRoutes.get("/get-active-contest", authenticatePlayerJWT, getActiveContest
 contestRoutes.post("/delete-contest", authenticatePlayerJWT, deleteSelectedContest);
 contestRoutes.post("/join-contest", authenticatePlayerJWT, joinContest);
 contestRoutes.post("/get-joined-contest-list", authenticatePlayerJWT, getJoinedContestList);
-contestRoutes.post("/declare-winner", authenticatePlayerJWT, declareWinner);
+contestRoutes.post("/declare-winner", authenticateUserJWT, declareWinner);
 contestRoutes.post("/contest-wins-list", authenticatePlayerJWT, getContestWinsList);
 contestRoutes.post("/get-game-wise-contest-list", authenticatePlayerJWT, getGameWiseContestList);
 contestRoutes.post("/get-upcoming-contest-list", authenticatePlayerJWT, getUpcomingContestList);

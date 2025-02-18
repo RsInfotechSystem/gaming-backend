@@ -12,7 +12,7 @@ const Notification = (sequelize, DataTypes) => {
             allowNull: false,
         },
         description: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
         createdBy: {

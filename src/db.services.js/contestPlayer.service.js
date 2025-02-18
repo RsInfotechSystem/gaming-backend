@@ -9,10 +9,10 @@ const contestPlayerServices = {
       throw error;
     }
   },
-  getContestByPlayerIdAndContestId: async (id, contestId) => {
+  getContestByPlayerIdAndContestId: async (playerId, contestId) => {
     try {
       return await ContestPlayer.findOne({
-        where: { playerId: id, contestId: contestId },
+        where: { playerId: playerId, contestId: contestId },
       });
     } catch (error) {
       throw error;
