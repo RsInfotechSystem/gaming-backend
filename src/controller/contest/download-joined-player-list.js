@@ -5,33 +5,33 @@ const fs = require("fs");
 const path = require("path");
 
 const downloadJoinedPlayerListExcel = async (request, response) => {
-    try{
+    try {
         const { contestId } = request.body;
 
-        if(!contestId){
+        if (!contestId) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "contestId is required"
+                status: "FAILED",
+                message: "contestId is required"
             })
         }
 
         const isContestExist = await contestServices.getContestById(contestId);
-        if(!isContestExist){
+        if (!isContestExist) {
             return response.status(200).json({
-                status : "FAILED",
-                message : "Contest does not exist"
+                status: "FAILED",
+                message: "Contest does not exist"
             });
         }
 
         const joinedPlayers = await contestPlayerServices.getContestPlayersByContestId(contestId);
         if (!joinedPlayers || joinedPlayers.length === 0) {
             return response.status(200).json({
-              status: "FAILED",
-              message: "No players have joined !",
+                status: "FAILED",
+                message: "No players have joined !",
             });
-          }
-        
-          const playerDetails = joinedPlayers.map((contestPlayer) => ({
+        }
+
+        const playerDetails = joinedPlayers.map((contestPlayer) => ({
             playerId: contestPlayer?.player?.id,
             name: contestPlayer?.player?.name,
             userName: contestPlayer?.player?.userName,
@@ -52,7 +52,7 @@ const downloadJoinedPlayerListExcel = async (request, response) => {
         // const baseFolder = path.resolve(__dirname, "..", "..", "public");
         // const excelFolder = path.join(baseFolder, "excels");    
         // await fs.ensureDir(excelFolder); // Ensure directory exists
-        
+
         // Create directory if not exists
         const downloadDir = path.join(__dirname, "../../../public/excels");
         if (!fs.existsSync(downloadDir)) {
@@ -68,22 +68,22 @@ const downloadJoinedPlayerListExcel = async (request, response) => {
         //file path
         const filePath = path.join(downloadDir, fileName);
         console.log("filePath : ", filePath);
-        
+
         //Generate Excel file
         XLSX.writeFile(workbook, filePath);
 
         // const downloadURL = `${request.protocol}://${request.get('host')}/public/excels/${fileName}`;
         // console.info("Download URL:", downloadURL);
 
-         // Send file for download
-         response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-         response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-         response.sendFile(filePath, (err) => {
+        // Send file for download
+        response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+        response.sendFile(filePath, (err) => {
             if (err) {
                 console.error("Error in sending file:", err);
                 return response.status(500).json({
-                 status: "FAILED",
-                 message: "Error in sending file"
+                    status: "FAILED",
+                    message: "Error in sending file"
                 });
             }
 
@@ -95,11 +95,11 @@ const downloadJoinedPlayerListExcel = async (request, response) => {
 
         });
 
-        
-    }catch(error){
+
+    } catch (error) {
         return response.status(500).json({
-            status : "FAILED",
-            message : error.message
+            status: "FAILED",
+            message: error.message
         });
     }
 }

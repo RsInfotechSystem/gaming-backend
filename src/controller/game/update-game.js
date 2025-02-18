@@ -10,7 +10,7 @@ const updateGame = async (request, response) => {
     const { isFileAttached } = request.query;
 
     const { id } = request;
-    const gameDetails = null;
+    let gameDetails = null;
 
     if (isFileAttached === "true") {
       //Upload image file using multer
