@@ -2,6 +2,7 @@ const contestServices = require("../../db.services.js/contest.service");
 const contestPlayerServices = require("../../db.services.js/contestPlayer.service")
 const playerServices = require("../../db.services.js/player.service");
 const notificationServices = require("../../db.services.js/notification.service");
+const walletServices = require("../../db.services.js/wallet.service");
 const runMiddleware = require("../../utils/helper/multer.middleware");
 const { uploadImg } = require("../../utils/multer/upload.img");
 const { declareWinnerValidation } = require("../../utils/validation/contest.validation");
@@ -21,7 +22,7 @@ const declareWinner = async (request, response) => {
 
         const contestDetails = JSON.parse(request.body.contestDetails);
         //extract data from request body
-        const { contestId, playerId } = contestDetails;
+        const { contestId, playerId} = contestDetails;
 
         //check validation
         const validationResult = await declareWinnerValidation.validate({ contestId, playerId }, { abortEarly: true });
@@ -42,6 +43,9 @@ const declareWinner = async (request, response) => {
             });
             ;
         }
+
+        // let validWinners = [];
+        // let invalidPlayers = [];
 
         //check player already exist Id or not
         const isPlayerExist = await playerServices.getPlayerById(playerId);
@@ -64,6 +68,33 @@ const declareWinner = async (request, response) => {
                 });
             }
 
+
+        // for (const playerId of playerIds) {
+        //     // Check if player exists
+        //     const player = await playerServices.getPlayerById(playerId);
+        //     if (!player) {
+        //         invalidPlayers.push(playerId);
+        //         continue;
+        //     }
+
+        //     // Check if player joined contest
+        //     const isPlayerJoined = await contestPlayerServices.getContestByPlayerIdAndContestId(playerId, contestId);
+        //     if (!isPlayerJoined) {
+        //         invalidPlayers.push(playerId);
+        //         continue;
+        //     }
+
+        //     validWinners.push(player);
+        // }
+
+        // if(validWinners.length === 0){
+        //     return responmse.status(200).json({
+        //         status : "FAILED",
+        //         message : "No valid player found to declare winner"
+        //     });
+        // }
+
+        
         const attachment = request.files?.map((file) => {
             const splitUrlArray = file?.destination?.split("/");
             const filteredUrl = splitUrlArray[splitUrlArray.length - 3] + '/' + splitUrlArray[splitUrlArray.length - 2] + '/' + splitUrlArray[splitUrlArray.length - 1] + file.filename;
@@ -83,6 +114,32 @@ const declareWinner = async (request, response) => {
         const result = await contestServices.updateContest(contestId, dataToUpdate);
 
         if (result) {
+            //update wallet of player with winning amount 
+            const isWalletExist = await walletServices.getWalletByPlayerId(playerId);
+            if(!isWalletExist){
+                return response.status(200).json({
+                    status : "FAILED",
+                    message : "Player wallet does not exist"
+                });
+            }
+            const log = `Amount credited to wallet on ${new Date().toISOString().split("T")[0].split("").reverse().join("")} for winning contest ${isContestExist.name}, with contest Id : ${contestId} of amount ${isContestExist.winningPrice}`;
+            
+            const updatedAmount = Number((Number(isWalletExist.earnedAmount) + Number(isContestExist.winningPrice)).toFixed(2));
+            console.log("updatedAmount : ", updatedAmount);
+            
+            const walletData = {
+                earnedAmount : updatedAmount,
+                paymentLogs : [...(isWalletExist.paymentLogs || []), log]
+            }
+            const walletId = isWalletExist.id;
+            const updateWallet = await walletServices.updateWallet(walletId, walletData);
+            if(!updateWallet || updateWallet.modifiedCount === 0){
+                return response.status(200).json({
+                    status : "FAILED",
+                    message : "Failed to add winning amount in player wallet"
+                });
+            }
+
             const notificationForAdmin = {
                 title: `Winner Declared for ${isContestExist.name} contest`,
                 description: `🎯 **${isPlayerExist.userName}** (ID: ${playerId}) has been declared the **winner** of **"${isContestExist.name}"**!\n

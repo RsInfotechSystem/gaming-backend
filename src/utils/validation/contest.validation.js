@@ -49,3 +49,10 @@ exports.addRoomIdvalidation = Joi.object().keys({
     roomId: Joi.string().required(),
     password: Joi.string().required(),
 })
+
+exports.requestPaymentValidation = Joi.object().keys({
+    amount : Joi.string().required(),
+    paymentMethod : Joi.string().required(),
+    upiId : Joi.string().allow(null, "").optional(),
+    bankDetails : Joi.object().allow(null, "").optional(),
+})

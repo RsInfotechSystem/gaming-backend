@@ -21,7 +21,7 @@ const Wallet = (sequelize, DataTypes) => {
         },
         paymentLogs : {
             type: DataTypes.JSON,  // Store logs in a JSON column
-            allowNull: true,        // Allow null initially or you can make it not nullable
+            allowNull: true,    
             defaultValue: []
         }
     },{

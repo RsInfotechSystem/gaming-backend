@@ -6,6 +6,7 @@ const roleRoutes = require("./role.routes");
 const userRoutes = require("./user.routes");
 const playerRoutes = require("./player.routes");
 const coinRoutes = require("./coin.routes");
+const walletRoutes = require("./wallet.routes");
 
 const routes = require("express").Router();
 
@@ -16,6 +17,7 @@ routes.use("/game", gameRoutes);
 routes.use("/player", playerRoutes);
 routes.use("/coin", coinRoutes);
 routes.use("/contest", contestRoutes);
+routes.use("/wallet", walletRoutes);
 // routes.use("/notification", notificationRoutes)
 
 module.exports = routes;

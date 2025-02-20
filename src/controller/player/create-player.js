@@ -1,4 +1,5 @@
 const playerServices = require("../../db.services.js/player.service");
+const walletServices = require("../../db.services.js/wallet.service");
 const { createPlayerValidation } = require("../../utils/validation/player.validation");
 const bcrypt = require("bcrypt");
 
@@ -61,6 +62,19 @@ const createPlayer = async (request, response) => {
 
     const player = await playerServices.createPlayer(dataToInsert);
     if (player && player?.dataValues && player?.dataValues?.id) {
+      //create wallet for player
+      const walletData = {
+        playerId : player.dataValues.id,
+        earnedAmount : 0.00,
+        paymentLogs : [`Players wallet created on ${player.dataValues.createdAt}`]
+      }
+      const wallet = await walletServices.createWallet(walletData);
+      if(!wallet.id){
+        return response.status(200).json({
+          status : "FAILED",
+          message : "Failed to create wallet for player"
+        })
+      }
       response.status(200).json({
         status: "SUCCESS",
         message: "Player created successfully",
@@ -74,8 +88,6 @@ const createPlayer = async (request, response) => {
       return;
     }
   } catch (error) {
-    console.log(" err", error);
-
     return response.status(500).json({
       status: "FAILED",
       message: error.message,
