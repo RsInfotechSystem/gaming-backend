@@ -26,6 +26,7 @@ const contestRoutes = require("express").Router();
 contestRoutes.post("/create-contest", authenticateUserJWT, createContest);
 contestRoutes.post("/update-contest", authenticateUserJWT, updateContest);
 contestRoutes.post("/get-contest-list", authenticatePlayerJWT, getContestList);
+contestRoutes.post("/get-admin-contest-list", authenticateUserJWT, getAdminContestList);
 contestRoutes.post("/get-contest-by-id", authenticatePlayerJWT, getContestById);
 contestRoutes.get("/get-active-contest", authenticatePlayerJWT, getActiveContest)
 contestRoutes.post("/delete-contest", authenticatePlayerJWT, deleteSelectedContest);
