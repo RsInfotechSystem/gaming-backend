@@ -47,6 +47,23 @@ const contestPlayerServices = {
       throw error;
     }
   },
+  getContestsByPlayerId : async (playerId) => {
+    try{
+      return await ContestPlayer.findAll({
+        where : {playerId : playerId},
+        include : [
+          {
+            model : Contest,
+            as : "contest",
+            attributes : ["id", "name", "contestDate", "contestTime", "gameType"]
+          }
+        ],
+
+      });
+    }catch(error){
+      throw error;
+    }
+  }
 };
 
 module.exports = contestPlayerServices;

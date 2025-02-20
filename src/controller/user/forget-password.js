@@ -29,13 +29,16 @@ const forgetPassword = async (request, response) => {
                 message: "Unable to generate token, please try again",
             });
         }
+        const frontendUrl = process.env.BACKEND_URL.includes("localhost")
+        ? "http://localhost:3000"  
+        : "https://gaming.rsinfotechsys.com"
 
         const dataToSend = {
             name: isUserExist.name,
             userName: isUserExist.userId,
-            resetUrl: `http://localhost:8000/user/change-password-form?token=${token}`,
+            resetUrl: `${frontendUrl}/user/change-password-form?token=${token}`,
         };
-
+        
         // send email to player for changing password
 
         // if(process.env.NODE_ENV === "production"){

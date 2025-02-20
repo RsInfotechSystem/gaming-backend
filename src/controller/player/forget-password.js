@@ -34,10 +34,14 @@ const forgetPassword = async (request, response) => {
 
         console.log("token : ", token)
 
+        const frontendUrl = process.env.BACKEND_URL.includes("localhost")
+        ? "http://localhost:3000"  
+        : "https://gaming.rsinfotechsys.com"
+
         const dataToSend = {
             name: isPlayerExist?.name,
             userName: isPlayerExist?.userName,
-            resetUrl: `http://localhost:8000/player/change-password-form?token=${token}`,
+            resetUrl: `${frontendUrl}/player/change-password-form?token=${token}`,
         };
 
 

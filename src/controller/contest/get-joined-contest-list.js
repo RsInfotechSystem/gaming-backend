@@ -1,5 +1,6 @@
 const contestServices = require("../../db.services.js/contest.service");
 const playerServices = require("../../db.services.js/player.service");
+const contestPlayerServices = require("../../db.services.js/contestPlayer.service");
 
 
 const getJoinedContestList = async (request, response) => {
@@ -10,10 +11,17 @@ const getJoinedContestList = async (request, response) => {
 
         //check player already exist Id or not
         const isPlayerExist = await playerServices.getPlayerById(id);
+        if(!isPlayerExist){
+            return response.status(200).json({
+                status : "FAILED",
+                message : "Player does not exist"
+            });
+        }
+
 
         //get data from db & send response to client
-        const result = await contestServices.getJoinedContestList(page, searchString, isPlayerExist?.dataValues?.joinedContests);
-        if (result.totalPages > 0) {
+        const result = await contestPlayerServices.getContestsByPlayerId(id);
+        if (result.length > 0) {
             response.status(200).json({
                 status: "SUCCESS",
                 message: "Contest fetch successfully",

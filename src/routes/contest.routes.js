@@ -8,6 +8,7 @@ const getContestById = require("../controller/contest/get-contest-by-id");
 const deleteSelectedContest = require("../controller/contest/delete-contest");
 const getActiveContest = require("../controller/contest/get-active-contest");
 const joinContest = require("../controller/contest/join-contest");
+const getAdminContestList = require("../controller/contest/get-admin-contest-list");
 const getJoinedContestList = require("../controller/contest/get-joined-contest-list");
 const declareWinner = require("../controller/contest/declare-winner");
 const getContestWinsList = require("../controller/contest/contest-wins-list");
