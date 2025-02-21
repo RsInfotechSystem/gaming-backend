@@ -28,6 +28,10 @@ const ContestPlayer = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      gameUserId : {
+        type : DataTypes.STRING,
+        allowNull : true,
+      },
       joinDate: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

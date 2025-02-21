@@ -28,6 +28,7 @@ const getContestWiseJoinedPlayerList = async (request, response) => {
             email: contestPlayer?.player?.email,
             mobile: contestPlayer?.player?.mobile,
             gameUserName: contestPlayer?.gameUserName,
+            gameUserId: contestPlayer?.gameUserId,
             joinDate: contestPlayer?.joinDate,
             contestName: contestPlayer?.contest?.name,
             contestDate: contestPlayer?.contest?.contestDate,

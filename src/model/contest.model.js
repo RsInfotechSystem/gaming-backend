@@ -76,6 +76,14 @@ const Contest = (Sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        gameSettingsInfo : {
+            type : DataTypes.JSONB,
+            allowNull: true,
+            defaultValue : {
+                mode : null,
+                map : null,
+            }
+        },
         createdBy: {
             type: DataTypes.UUID,
             references: {

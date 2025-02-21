@@ -12,11 +12,11 @@ const joinContest = async (request, response) => {
     const { id } = request;
 
     //extract data from request body
-    const { contestId, gameUserName } = request.body;
+    const { contestId, gameUserName,gameUserId } = request.body;
 
     //check validation
     const validationResult = await joinContestValidation.validate(
-      { contestId, gameUserName },
+      { contestId, gameUserName,gameUserId },
       { abortEarly: true }
     );
     if (validationResult.error) {
@@ -44,6 +44,7 @@ const joinContest = async (request, response) => {
       });
     }
 
+    //Check if player have sufficient coins to join contest
     if (
       isContestExist?.dataValues?.reqCoinsToJoin >
       isPlayerExist?.dataValues?.availableCoins
@@ -62,6 +63,7 @@ const joinContest = async (request, response) => {
     //   });
     // }
 
+    //check if player has already joined the contest
     const isAlreadyJoined = await contestPlayerServices.getContestByPlayerIdAndContestId(id,contestId)
     if(isAlreadyJoined){
       return response.status(200).json({
@@ -70,6 +72,7 @@ const joinContest = async (request, response) => {
       });
     }
 
+    //count the players in contest
     const playerJoinedCount = await contestPlayerServices.countPlayersInContest(contestId);
     if (isContestExist?.dataValues?.playersLimit <= playerJoinedCount) {
       return response.status(200).json({
@@ -81,7 +84,8 @@ const joinContest = async (request, response) => {
     const dataToInsert = {
       contestId: contestId,
       playerId: id,
-      gameUserName : gameUserName
+      gameUserName : gameUserName,
+      gameUserId : gameUserId
     };
 
     //Add contest in db and send response to client

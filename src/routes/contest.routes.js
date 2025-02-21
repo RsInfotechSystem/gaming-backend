@@ -20,6 +20,7 @@ const getContestWiseJoinedPlayerList = require("../controller/contest/get-contes
 const getGameWiseUpcomingContestList = require("../controller/contest/get-game-wise-upcoming-contest-list");
 const downloadJoinedPlayerListExcel = require("../controller/contest/download-joined-player-list");
 const requestPayment = require("../controller/contest/request-payment");
+const getAdminContestById = require("../controller/contest/get-admin-contest-by-id");
 
 const contestRoutes = require("express").Router();
 
@@ -29,6 +30,7 @@ contestRoutes.post("/update-contest", authenticateUserJWT, updateContest);
 contestRoutes.post("/get-contest-list", authenticatePlayerJWT, getContestList);
 contestRoutes.post("/get-admin-contest-list", authenticateUserJWT, getAdminContestList);
 contestRoutes.post("/get-contest-by-id", authenticatePlayerJWT, getContestById);
+contestRoutes.post("/get-admin-contest-by-id", authenticateUserJWT, getAdminContestById);
 contestRoutes.get("/get-active-contest", authenticatePlayerJWT, getActiveContest)
 contestRoutes.post("/delete-contest", authenticatePlayerJWT, deleteSelectedContest);
 contestRoutes.post("/join-contest", authenticatePlayerJWT, joinContest);

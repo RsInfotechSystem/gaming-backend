@@ -41,7 +41,7 @@ const contestPlayerServices = {
             attributes: ["name", "contestDate", "contestTime", "gameType"],
           },
         ],
-        attributes: ["gameUserName", "joinDate"],
+        attributes: ["gameUserName","gameUserId", "joinDate"],
       });
     } catch (error) {
       throw error;
