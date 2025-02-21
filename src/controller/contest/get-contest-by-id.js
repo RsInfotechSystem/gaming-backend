@@ -19,7 +19,6 @@ const getContestById = async (request, response) => {
 
         //check role exist or not
         const contest = await contestServices.getContestById(contestId);
-
         if (contest?.id) {
             response.status(200).json({
                 status: "SUCCESS",

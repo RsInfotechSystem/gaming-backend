@@ -12,6 +12,7 @@ exports.createContestValidation = Joi.object().keys({
     winningPrice: Joi.number().required(),
     playersLimit: Joi.number().required(),
     noOfWinners: Joi.number().required(),
+    gameSettingsInfo: Joi.object().allow(null, "").optional(),
 });
 
 
@@ -28,6 +29,7 @@ exports.updateContestValidation = Joi.object().keys({
     roomId: Joi.string().allow(null, "").optional(),
     passwordToJoin: Joi.string().allow(null, "").optional(),
     oldContestFiles: Joi.array().items().allow(null, "").optional(),
+    gameSettingsInfo : Joi.object().allow(null, "").optional(),
 });
 
 exports.contestIdsValidationSchema = Joi.object().keys({

@@ -19,13 +19,13 @@ const createContest = async (request, response) => {
         //     });
         //     return;
         // };
-
         // const contestDetails = JSON.parse(request.body.contestDetails);
+        
         //extract data from request body
-        const { name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners } = request.body;
+        const { name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners,gameSettingsInfo } = request.body;
 
         //check validation
-        const validationResult = await createContestValidation.validate({ name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners }, { abortEarly: true });
+        const validationResult = await createContestValidation.validate({ name, description, gameId, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, noOfWinners,gameSettingsInfo }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -82,6 +82,7 @@ const createContest = async (request, response) => {
             winningPrice, 
             playersLimit, 
             noOfWinners,
+            gameSettingsInfo,
             roomId: null,
             passwordToJoin: null,
             createdBy: id,
@@ -104,6 +105,7 @@ const createContest = async (request, response) => {
                 reqCoinsToJoin: result.reqCoinsToJoin,
                 winningPrice: result.winningPrice,
                 playersLimit: result.playersLimit,
+                gameSettingsInfo : result.gameSettingsInfo,
                 roomId: result.roomId,
                 createdBy: result.createdBy,
                 createdAt: result.createdAt,

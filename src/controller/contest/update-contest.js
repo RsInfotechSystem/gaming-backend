@@ -21,10 +21,10 @@ const updateContest = async (request, response) => {
 
         const contestDetails = JSON.parse(request.body.contestDetails);
         //extract data from request body
-        const { contestId, name, description, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin, oldContestFiles } = contestDetails;
+        const { contestId, name, description, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin, oldContestFiles,gameSettingsInfo } = contestDetails;
 
         //check validation
-        const validationResult = await updateContestValidation.validate({ contestId, name, description, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin, oldContestFiles }, { abortEarly: true });
+        const validationResult = await updateContestValidation.validate({ contestId, name, description, gameType, contestDate, contestTime, reqCoinsToJoin, winningPrice, playersLimit, roomId, passwordToJoin, oldContestFiles,gameSettingsInfo }, { abortEarly: true });
         if (validationResult.error) {
             response.status(200).json({
                 status: "FAILED",
@@ -72,16 +72,17 @@ const updateContest = async (request, response) => {
 
 
         const dataToInsert = {
-            name : name ? name: isContestExist.name, 
-            description : description ? description : isContestExist.description, 
-            gameType : gameType ? gameType : isContestExist.gameType, 
-            contestDate : contestDate ? contestDate : isContestExist.contestDate,
-            contestTime : contestTime ? contestTime : isContestExist.contestTime, 
-            reqCoinsToJoin : reqCoinsToJoin ? reqCoinsToJoin : isContestExist.reqCoinsToJoin, 
-            winningPrice : winningPrice ? winningPrice : isContestExist.winningPrice, 
-            playersLimit : playersLimit ? playersLimit : isContestExist.playersLimit, 
-            roomId : roomId ? roomId : isContestExist.roomId, 
-            passwordToJoin : passwordToJoin ? passwordToJoin : isContestExist.passwordToJoin,
+            name : name ? name: isContestExist?.name, 
+            description : description ? description : isContestExist?.description, 
+            gameType : gameType ? gameType : isContestExist?.gameType, 
+            contestDate : contestDate ? contestDate : isContestExist?.contestDate,
+            contestTime : contestTime ? contestTime : isContestExist?.contestTime, 
+            reqCoinsToJoin : reqCoinsToJoin ? reqCoinsToJoin : isContestExist?.reqCoinsToJoin, 
+            winningPrice : winningPrice ? winningPrice : isContestExist?.winningPrice, 
+            playersLimit : playersLimit ? playersLimit : isContestExist?.playersLimit, 
+            roomId : roomId ? roomId : isContestExist?.roomId, 
+            gameSettingsInfo : gameSettingsInfo ? gameSettingsInfo : isContestExist?.gameSettingsInfo,
+            passwordToJoin : passwordToJoin ? passwordToJoin : isContestExist?.passwordToJoin,
             createdBy: request.id,
             contestFiles: [...attachment, ...oldContestFiles] ?? [],
         }
@@ -101,6 +102,7 @@ const updateContest = async (request, response) => {
                 reqCoinsToJoin: dataToInsert.reqCoinsToJoin,
                 winningPrice: dataToInsert.winningPrice,
                 playersLimit: dataToInsert.playersLimit,
+                gameSettingsInfo: dataToInsert.gameSettingsInfo,    
                 roomId: dataToInsert.roomId,
                 passwordToJoin: dataToInsert.passwordToJoin,
                 contestFiles: dataToInsert.contestFiles,
